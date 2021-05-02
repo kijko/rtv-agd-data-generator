@@ -1,0 +1,60 @@
+global_settings:                         # ustawienia globalne, dotyczące wszystkich
+  number_of_people: 1000                 # liczba osób w symulacji
+  simulation:
+    start_month: JANUARY                 # pierwszy miesiąc symulacji
+    end_month: JUNE                      # ostatni miesiąc symulacji
+    year: 2020                           # rok symulacji
+    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
+    events:                              # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
+      - from: 10.04                      # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
+        to: 15.04                        # wynosi 0.5 zamiast 0.05. Analogicznie w zdarzeniu poniżej
+        daily_go_to_shop_probability: 0.5
+
+      - from: 05.05
+        to: 05.05
+        daily_go_to_shop_probability: 0.2
+  product_categories: [                  # kategorie produktów. Do nich będą mapowane produkty z pliku CSV
+    FRIDGE,                              # lodówki
+    TV,                                  # telewizory
+    GAME_CONSOLE,                        # konsole do gier
+  ]
+
+profiles:                                # ustawienia profili, dotyczące określonej części ludzi
+  - name: group1                         # nazwa grupy
+    percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    social_group: POOR                   # nazwa klasy społecznej
+    salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
+      from: 1000
+      to: 2000
+    needs:                               # potrzeby
+      - category: FRIDGE                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
+        how_much_want: 0.6
+      - category: TV                     # 40% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        how_much_want: 0.4
+                                         # 0% na kupienie niczego (jak wyżej)
+
+  - name: group2                         # nazwa grupy
+    percent_of_people: 60                # jaki procent całości stanowi dana grupa
+    social_group: MIDDLE_CLASS           # nazwa klasy społecznej
+    salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
+      from: 3000
+      to: 5000
+    needs:                               # potrzeby
+      - category: GAME_CONSOLE           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        how_much_want: 0.8
+                                         # 20% na kupno niczego (pod warunkiem pójścia do sklepu)
+
+  - name: group3                         # nazwa grupy
+    percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    social_group: RICH_MAN               # nazwa klasy społecznej
+    salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
+      from: 10000
+      to: 15000
+    needs:                               # potrzeby
+      - category: GAME_CONSOLE           # 100 % na kupno konsoli (pod warunkiem że pójdzie do sklepu)
+        how_much_want: 1
+                                         # 0% na kupno niczego (napewno coś kupi)
+
+# NOTKA 1: Pensja jest losowana dla każdego na początku symulacji i pozostaje taka sama przez całą symulację
+# NOTKA 2: Jeśli dojdzie do decyzji kupna przedmiotu, konkretny produkt wybierany jest losowo spośród produktów
+#          mieszczących się w budżecie
