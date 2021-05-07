@@ -1,12 +1,6 @@
-import numpy as np
+from matrix import *
 
-array = np.array([
-    [3, 7, 1],
-    [10, 3, 2],
-    [5, 6, 7]
-])
-print(array)
-print()
+Matrix(
+    Configuration(GlobalSettings(1, 6, 2021))
+).run()
 
-# Sort the whole array
-print(np.sort(array, axis=None))
