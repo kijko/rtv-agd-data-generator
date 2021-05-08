@@ -20,9 +20,8 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
   ]
 
 profiles:                                # ustawienia profili, dotyczące określonej części ludzi
-  - name: group1                         # nazwa grupy
+  - name: POOR                           # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
-    social_group: POOR                   # nazwa klasy społecznej
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 1000
       to: 2000
@@ -35,7 +34,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
         num_of_items: 2
                                          # 0% na kupienie niczego (jak wyżej)
 
-  - name: group2                         # nazwa grupy
+  - name: MIDDLE_CLASS                   # nazwa grupy (klasy spolecznej)
     percent_of_people: 60                # jaki procent całości stanowi dana grupa
     social_group: MIDDLE_CLASS           # nazwa klasy społecznej
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
@@ -47,9 +46,8 @@ profiles:                                # ustawienia profili, dotyczące okreś
         num_of_items: 2
                                          # 20% na kupno niczego (pod warunkiem pójścia do sklepu)
 
-  - name: group3                         # nazwa grupy
+  - name: RICH_MEN                       # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
-    social_group: RICH_MAN               # nazwa klasy społecznej
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 10000
       to: 15000
