@@ -15,7 +15,9 @@ class Matrix:
         world = World(
             self.config.global_settings.start_month,
             self.config.global_settings.end_month,
-            self.config.global_settings.year
+            self.config.global_settings.year,
+            self.config.global_settings.daily_go_to_shop_probability,
+            self.config.global_settings.events
         )
         for group in self.groups:
             print("Run matrix simulation for group: " + group.name)
@@ -83,10 +85,12 @@ def _create_groups(population, profiles):
 
 
 class World:
-    def __init__(self, start_month, end_month, year):
+    def __init__(self, start_month, end_month, year, regular_go_to_shop_probability, events):
+        self._regular_go_to_shop_probability = regular_go_to_shop_probability
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
+        self._events = events
 
     def start(self, slave):
         if self._actual_date == self._last_day_date:
@@ -99,9 +103,12 @@ class World:
 
                 if self._actual_date.day == 1:
                     slave.pay_the_paycheck()
-                    print("    Payday ! Actual slaves account: " + str(slave.account_balance))
+                    print("    [Payday ! Actual slaves account: " + str(slave.account_balance) + "]")
 
-                print("    Slave does nothing...")
+                if self._will_go_to_shop():
+                    print("    Slave goes to the shop !")
+                else:
+                    print("    Slave does nothing...")
 
                 self._actual_date += _day
             print("End of the world for slave with id: " + slave.id)
@@ -109,6 +116,22 @@ class World:
     def reset(self):
         print("World reset occurs")
         self._actual_date = self._start_date
+
+    def _will_go_to_shop(self):
+        event = self._get_actual_event()
+
+        if event is None:
+            return random.random() <= self._regular_go_to_shop_probability
+        else:
+            print("    [probability bonus !]")
+            return random.random() <= event.go_to_shop_probability
+
+    def _get_actual_event(self):
+        for event in self._events:
+            if event.is_event_date(self._actual_date):
+                return event
+
+        return None
 
 
 
@@ -121,7 +144,9 @@ class Configuration:
 
 
 class GlobalSettings:
-    def __init__(self, start_month, end_month, year, population):
+    def __init__(self, start_month, end_month, year, population, daily_go_to_shop_probability, events):
+        self.events = events
+        self.daily_go_to_shop_probability = daily_go_to_shop_probability
         self.population = population
         self.year = year
         self.end_month = end_month
@@ -135,4 +160,13 @@ class Profile:
         self.percent_of_people = percent_of_people
         self.name = name
 
+
+class Event:
+    def __init__(self, day_from, month_from, day_to, month_to, year, go_to_shop_probability):
+        self.go_to_shop_probability = go_to_shop_probability
+        self._first_day = datetime.date(year, month_from, day_from)
+        self._last_day = datetime.date(year, month_to, day_to)
+
+    def is_event_date(self, date):
+        return self._first_day <= date <= self._last_day
 

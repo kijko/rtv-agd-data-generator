@@ -13,11 +13,6 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - from: 05.05
         to: 05.05
         daily_go_to_shop_probability: 0.2
-  product_categories: [                  # kategorie produktów. Do nich będą mapowane produkty z pliku CSV
-    FRIDGE,                              # lodówki
-    TV,                                  # telewizory
-    GAME_CONSOLE,                        # konsole do gier
-  ]
 
 profiles:                                # ustawienia profili, dotyczące określonej części ludzi
   - name: POOR                           # nazwa grupy (klasy spolecznej)
