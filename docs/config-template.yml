@@ -24,8 +24,8 @@ profiles:                                # ustawienia profili, dotyczące okreś
       - category: FRIDGE                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
         how_much_want: 0.6
         num_of_items: 1
-      - category: TV                     # 40% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        how_much_want: 0.4
+      - category: TV                     # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        how_much_want: 0.5
         num_of_items: 2
                                          # 0% na kupienie niczego (jak wyżej)
 
@@ -39,7 +39,6 @@ profiles:                                # ustawienia profili, dotyczące okreś
       - category: GAME_CONSOLE           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
         how_much_want: 0.8
         num_of_items: 2
-                                         # 20% na kupno niczego (pod warunkiem pójścia do sklepu)
 
   - name: RICH_MEN                       # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa

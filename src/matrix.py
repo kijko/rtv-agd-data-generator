@@ -20,6 +20,7 @@ class Matrix:
             self.config.global_settings.events
         )
         for group in self.groups:
+
             print("Run matrix simulation for group: " + group.name)
             while group.has_next_slave():
                 slave = group.next_slave()
@@ -28,11 +29,12 @@ class Matrix:
 
 
 class Group:
-    def __init__(self, name, population, salary_from, salary_to):
+    def __init__(self, name, population, salary_from, salary_to, needs):
         self._salary_to = salary_to
         self._salary_from = salary_from
         self._max_population = population
         self._actual_population = 0
+        self.needs = needs
         self.name = name
 
     def has_next_slave(self):
@@ -41,7 +43,7 @@ class Group:
     def next_slave(self):
         if self.has_next_slave():
             self._actual_population += 1
-            slave = Slave(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to))
+            slave = Slave(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to), self.needs)
 
             return slave
         else:
@@ -49,10 +51,12 @@ class Group:
 
 
 class Slave:
-    def __init__(self, number_in_group, group_name, salary):
+    def __init__(self, number_in_group, group_name, salary, needs):
         self.id = group_name + "-" + str(number_in_group)
 
         self._salary = salary
+        self.needs = needs
+
         self.account_balance = 0.0
 
     def pay_the_paycheck(self):
@@ -77,7 +81,8 @@ def _create_groups(population, profiles):
                 profile.name,
                 calculate_group_population(profile.percent_of_people),
                 profile.salary_from,
-                profile.salary_to
+                profile.salary_to,
+                profile.needs
             )
         )
 
@@ -96,7 +101,12 @@ class World:
         if self._actual_date == self._last_day_date:
             print("The world is over. Press reset button")
         else:
-            print("Slave with id: " + slave.id + " has been placed in the world.")
+            needStr = ""
+            for need in slave.needs:
+                needStr += "[" + need._category + ", " + str(need._how_much_want) + ", " + str(need._num_of_items) + "] "
+
+            print("Slave with id: " + slave.id + " and needs: " + needStr + "has been placed in the world.")
+
             while self._actual_date <= self._last_day_date:
                 actual_date_str = self._actual_date.strftime("%d-%m-%y")
                 print("  Day " + actual_date_str + " begins.")
@@ -154,11 +164,12 @@ class GlobalSettings:
 
 
 class Profile:
-    def __init__(self, name, percent_of_people, salary_from, salary_to):
+    def __init__(self, name, percent_of_people, salary_from, salary_to, needs):
         self.salary_to = salary_to
         self.salary_from = salary_from
         self.percent_of_people = percent_of_people
         self.name = name
+        self.needs = needs
 
 
 class Event:
@@ -170,3 +181,9 @@ class Event:
     def is_event_date(self, date):
         return self._first_day <= date <= self._last_day
 
+
+class Need:
+    def __init__(self, category, how_much_want, num_of_items):
+        self._num_of_items = num_of_items
+        self._how_much_want = how_much_want
+        self._category = category
