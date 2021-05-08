@@ -51,7 +51,10 @@ class Slave:
         self.id = group_name + "-" + str(number_in_group)
 
         self._salary = salary
-        self._account_balance = 0.0
+        self.account_balance = 0.0
+
+    def pay_the_paycheck(self):
+        self.account_balance += self._salary
 
 
 def _create_groups(population, profiles):
@@ -91,7 +94,14 @@ class World:
         else:
             print("Slave with id: " + slave.id + " has been placed in the world.")
             while self._actual_date <= self._last_day_date:
-                print(self._actual_date.strftime("Actual date: %d-%m-%y - Slave does nothing"))
+                actual_date_str = self._actual_date.strftime("%d-%m-%y")
+                print("  Day " + actual_date_str + " begins.")
+
+                if self._actual_date.day == 1:
+                    slave.pay_the_paycheck()
+                    print("    Payday ! Actual slaves account: " + str(slave.account_balance))
+
+                print("    Slave does nothing...")
 
                 self._actual_date += _day
             print("End of the world for slave with id: " + slave.id)
@@ -125,8 +135,4 @@ class Profile:
         self.percent_of_people = percent_of_people
         self.name = name
 
-
-def _createSlaveWithProfile(profile):
-    # todo
-    pass
 
