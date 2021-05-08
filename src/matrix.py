@@ -12,33 +12,49 @@ class Matrix:
         self.groups = _create_groups(config.global_settings.population, config.profiles)
 
     def run(self):
-        for group in self.groups:
-            print("---- Group ----")
-            print(group.name)
-            print(group.population)
-            print(group.salary_from)
-            print(group.salary_to)
-            print(group.generate_salary())
-            print("---- ----- ----")
-
-        Life(
+        world = World(
             self.config.global_settings.start_month,
             self.config.global_settings.end_month,
             self.config.global_settings.year
-        ).start()
+        )
+        for group in self.groups:
+            print("Run matrix simulation for group: " + group.name)
+            while group.has_next_slave():
+                slave = group.next_slave()
+                world.start(slave)
+                world.reset()
+
+
+class Group:
+    def __init__(self, name, population, salary_from, salary_to):
+        self._salary_to = salary_to
+        self._salary_from = salary_from
+        self._max_population = population
+        self._actual_population = 0
+        self.name = name
+
+    def has_next_slave(self):
+        return self._actual_population < self._max_population
+
+    def next_slave(self):
+        if self.has_next_slave():
+            self._actual_population += 1
+            slave = Slave(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to))
+
+            return slave
+        else:
+            return None
+
+
+class Slave:
+    def __init__(self, number_in_group, group_name, salary):
+        self.id = group_name + "-" + str(number_in_group)
+
+        self._salary = salary
+        self._account_balance = 0.0
 
 
 def _create_groups(population, profiles):
-    class Group:
-        def __init__(self, name, population, salary_from, salary_to):
-            self.salary_to = salary_to
-            self.salary_from = salary_from
-            self.population = population
-            self.name = name
-
-        def generate_salary(self):
-            return random.randint(self.salary_from, self.salary_to)
-
     def calculate_group_population(percent_of_people):
         group_population_float = population * (percent_of_people / 100)
         group_population_int = int(group_population_float)
@@ -63,17 +79,27 @@ def _create_groups(population, profiles):
     return groups
 
 
-class Life:
+class World:
     def __init__(self, start_month, end_month, year):
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
 
-    def start(self):
-        while self._actual_date <= self._last_day_date:
-            print(self._actual_date.strftime("Actual time: %d %m %y"))
-            print("doing something...")
-            self._actual_date += _day
+    def start(self, slave):
+        if self._actual_date == self._last_day_date:
+            print("The world is over. Press reset button")
+        else:
+            print("Slave with id: " + slave.id + " has been placed in the world.")
+            while self._actual_date <= self._last_day_date:
+                print(self._actual_date.strftime("Actual date: %d-%m-%y - Slave does nothing"))
+
+                self._actual_date += _day
+            print("End of the world for slave with id: " + slave.id)
+
+    def reset(self):
+        print("World reset occurs")
+        self._actual_date = self._start_date
+
 
 
 
