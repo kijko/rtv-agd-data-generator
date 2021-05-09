@@ -103,7 +103,7 @@ class World:
         else:
             needStr = ""
             for need in slave.needs:
-                needStr += "[" + need._category + ", " + str(need._how_much_want) + ", " + str(need._num_of_items) + "] "
+                needStr += "[" + need._category + ", " + str(need._num_of_items) + ", " + str(need._priority) + ", " + str(need._indecision_factor) + "] "
 
             print("Slave with id: " + slave.id + " and needs: " + needStr + "has been placed in the world.")
 
@@ -117,6 +117,7 @@ class World:
 
                 if self._will_go_to_shop():
                     print("    Slave goes to the shop !")
+
                 else:
                     print("    Slave does nothing...")
 
@@ -183,7 +184,8 @@ class Event:
 
 
 class Need:
-    def __init__(self, category, how_much_want, num_of_items):
+    def __init__(self, category, num_of_items, priority, indecision_factor):
+        self._indecision_factor = indecision_factor
+        self._priority = priority
         self._num_of_items = num_of_items
-        self._how_much_want = how_much_want
         self._category = category

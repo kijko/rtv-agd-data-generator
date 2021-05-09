@@ -20,8 +20,8 @@ Matrix(
                 1000,
                 2000,
                 [
-                    Need("FRIDGE", 0.6, 1),
-                    Need("TV", 0.5, 2)
+                    Need("FRIDGE", 1, 1, 0.4),
+                    Need("TV", 2, 2, 0.6)
                 ]
             ),
             Profile(
@@ -30,7 +30,7 @@ Matrix(
                 3000,
                 5000,
                 [
-                    Need("GAME_CONSOLE", 0.8, 2)
+                    Need("GAME_CONSOLE", 2, 1, 0.6)
                 ]
             ),
             Profile(
@@ -39,7 +39,7 @@ Matrix(
                 10000,
                 15000,
                 [
-                    Need("GAME_CONSOLE", 1, 1)
+                    Need("GAME_CONSOLE", 1, 1, 0.6)
                 ]
             )
         ]
