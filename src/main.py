@@ -1,7 +1,8 @@
 from matrix import *
 import products
+import gui
 
-Matrix(
+example_simulation = Matrix(
     Configuration(
         GlobalSettings(
             1,
@@ -53,6 +54,6 @@ Matrix(
             products.Product("TV-3", 8192.99, "TV")
         ])
     )
-).run()
+)
 
-
+gui.run_gui(lambda: example_simulation.run())
