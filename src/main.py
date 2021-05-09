@@ -1,4 +1,5 @@
 from matrix import *
+import products
 
 Matrix(
     Configuration(
@@ -21,7 +22,8 @@ Matrix(
                 2000,
                 [
                     Need("FRIDGE", 1, 1, 0.4),
-                    Need("TV", 2, 2, 0.6)
+                    Need("TV", 2, 0, 0.6),
+                    Need("GAME_CONSOLE", 3, 2, 0.8)
                 ]
             ),
             Profile(
@@ -42,7 +44,14 @@ Matrix(
                     Need("GAME_CONSOLE", 1, 1, 0.6)
                 ]
             )
-        ]
+        ],
+        products.ProductRepository([
+            products.Product("FRIDGE-1", 4999.99, "FRIDGE"),
+            products.Product("FRIDGE-2", 2499.89, "FRIDGE"),
+            products.Product("TV-1", 699.89, "TV"),
+            products.Product("TV-2", 6129.00, "TV"),
+            products.Product("TV-3", 8192.99, "TV")
+        ])
     )
 ).run()
 

@@ -1,6 +1,7 @@
 import datetime
 import calendar
 import random
+import queue
 
 _day = datetime.timedelta(days=1)
 
@@ -17,7 +18,8 @@ class Matrix:
             self.config.global_settings.end_month,
             self.config.global_settings.year,
             self.config.global_settings.daily_go_to_shop_probability,
-            self.config.global_settings.events
+            self.config.global_settings.events,
+            self.config.product_repository
         )
         for group in self.groups:
 
@@ -62,6 +64,19 @@ class Slave:
     def pay_the_paycheck(self):
         self.account_balance += self._salary
 
+    def prepare_shopping_list(self):
+        q = queue.Queue()
+
+        copied_needs = self.needs.copy()
+        copied_needs.sort(key=lambda item: item.priority)
+
+        for need in copied_needs:
+            for i in range(need.num_of_items):
+                q.put(need.category)
+
+        return q
+
+
 
 def _create_groups(population, profiles):
     def calculate_group_population(percent_of_people):
@@ -90,12 +105,13 @@ def _create_groups(population, profiles):
 
 
 class World:
-    def __init__(self, start_month, end_month, year, regular_go_to_shop_probability, events):
+    def __init__(self, start_month, end_month, year, regular_go_to_shop_probability, events, product_repository):
         self._regular_go_to_shop_probability = regular_go_to_shop_probability
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
         self._events = events
+        self._product_repository = product_repository
 
     def start(self, slave):
         if self._actual_date == self._last_day_date:
@@ -103,7 +119,7 @@ class World:
         else:
             needStr = ""
             for need in slave.needs:
-                needStr += "[" + need._category + ", " + str(need._num_of_items) + ", " + str(need._priority) + ", " + str(need._indecision_factor) + "] "
+                needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.indecision_factor) + "] "
 
             print("Slave with id: " + slave.id + " and needs: " + needStr + "has been placed in the world.")
 
@@ -117,7 +133,30 @@ class World:
 
                 if self._will_go_to_shop():
                     print("    Slave goes to the shop !")
+                    shopping_list = slave.prepare_shopping_list()
 
+                    while not shopping_list.empty():
+                        product_category = shopping_list.get()
+                        print("      Looking for products from category: " + product_category)
+
+                        products_that_slave_can_afford_atm = self._product_repository.find_by_category_and_max_price(product_category, slave.account_balance)
+                        num_of_that_products = len(products_that_slave_can_afford_atm)
+                        if num_of_that_products == 0:
+                            print("      There is no products slave can afford at the moment")
+
+                        elif num_of_that_products == 1:
+                            print("      There is one product slave can afford at the moment")
+                            for product in products_that_slave_can_afford_atm:
+                                print("        " + repr(product))
+
+                        else:
+                            print("      There is more than one product slave can afford at the moment")
+                            for product in products_that_slave_can_afford_atm:
+                                print("        " + repr(product))
+
+
+
+                    print("    Slave has finished shopping")
                 else:
                     print("    Slave does nothing...")
 
@@ -149,9 +188,10 @@ class World:
 
 
 class Configuration:
-    def __init__(self, global_settings, profiles):
+    def __init__(self, global_settings, profiles, product_repository):
         self.global_settings = global_settings
         self.profiles = profiles
+        self.product_repository = product_repository
 
 
 class GlobalSettings:
@@ -185,7 +225,7 @@ class Event:
 
 class Need:
     def __init__(self, category, num_of_items, priority, indecision_factor):
-        self._indecision_factor = indecision_factor
-        self._priority = priority
-        self._num_of_items = num_of_items
-        self._category = category
+        self.indecision_factor = indecision_factor
+        self.priority = priority
+        self.num_of_items = num_of_items
+        self.category = category
