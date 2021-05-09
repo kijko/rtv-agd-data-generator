@@ -76,6 +76,34 @@ class Slave:
 
         return q
 
+    def buy_or_not_to_buy(self, product):
+        need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
+
+        if random.random() <= need_of_product.indecision_factor:
+            return "NOT_TO_BUY"
+        else:
+            self._satisfy_need(product, need_of_product)
+
+            return "BUY"
+
+    def _satisfy_need(self, product, need_of_product):
+        self.account_balance -= product.price
+
+        if need_of_product.num_of_items > 1:
+            need_of_product.num_of_items -= 1
+        else:
+            self.needs = list(filter(lambda need: need.category != need_of_product.category, self.needs.copy()))
+
+    def __repr__(self):
+        needs_str = "["
+
+        for need in self.needs:
+            needs_str += repr(need) + ", "
+
+        needs_str += "]"
+
+
+        return "Slave: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + "]"
 
 
 def _create_groups(population, profiles):
@@ -133,6 +161,7 @@ class World:
 
                 if self._will_go_to_shop():
                     print("    Slave goes to the shop !")
+                    print("    Slave's state: " + repr(slave))
                     shopping_list = slave.prepare_shopping_list()
 
                     while not shopping_list.empty():
@@ -146,17 +175,32 @@ class World:
 
                         elif num_of_that_products == 1:
                             print("      There is one product slave can afford at the moment")
-                            for product in products_that_slave_can_afford_atm:
-                                print("        " + repr(product))
+                            product_to_buy = products_that_slave_can_afford_atm[0]
+                            print("        " + repr(product_to_buy))
+
+                            purchase_result = slave.buy_or_not_to_buy(product_to_buy)
+
+                            if purchase_result == "BUY":
+                                print("        Slave bought the product !")
+                            else:
+                                print("        Slave decided not to buy the product...")
 
                         else:
-                            print("      There is more than one product slave can afford at the moment")
-                            for product in products_that_slave_can_afford_atm:
-                                print("        " + repr(product))
+                            print("      There is more than one " + "[" + str(num_of_that_products) + "]" + " product slave can afford at the moment")
+                            product_to_buy = \
+                                products_that_slave_can_afford_atm[random.randint(0, num_of_that_products - 1)]
 
+                            print("        Slave is thinking about this one: " + repr(product_to_buy))
 
+                            purchase_result = slave.buy_or_not_to_buy(product_to_buy)
+
+                            if purchase_result == "BUY":
+                                print("        Slave bought the product !")
+                            else:
+                                print("        Slave decided not to buy the product...")
 
                     print("    Slave has finished shopping")
+                    print("    Slave's state: " + repr(slave))
                 else:
                     print("    Slave does nothing...")
 
@@ -182,6 +226,7 @@ class World:
                 return event
 
         return None
+
 
 
 
@@ -229,3 +274,6 @@ class Need:
         self.priority = priority
         self.num_of_items = num_of_items
         self.category = category
+
+    def __repr__(self):
+        return "[" + self.category + ", " + str(self.num_of_items) + ", " + str(self.priority) + ", " + str(self.indecision_factor) + "]"
