@@ -23,7 +23,7 @@ class Matrix:
         )
         for group in self.groups:
 
-            print("Run matrix simulation for group: " + group.name)
+            print("Uruchomiono symulacje dla grupy: " + group.name)
             while group.has_next_slave():
                 slave = group.next_slave()
                 world.start(slave)
@@ -143,72 +143,72 @@ class World:
 
     def start(self, slave):
         if self._actual_date == self._last_day_date:
-            print("The world is over. Press reset button")
+            print("Świat się zakończył. Zresetuj go")
         else:
             needStr = ""
             for need in slave.needs:
                 needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.indecision_factor) + "] "
 
-            print("Slave with id: " + slave.id + " and needs: " + needStr + "has been placed in the world.")
+            print("Osoba z id: " + slave.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
 
             while self._actual_date <= self._last_day_date:
                 actual_date_str = self._actual_date.strftime("%d-%m-%y")
-                print("  Day " + actual_date_str + " begins.")
+                print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
                     slave.pay_the_paycheck()
-                    print("    [Payday ! Actual slaves account: " + str(slave.account_balance) + "]")
+                    print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(slave.account_balance) + "]")
 
                 if self._will_go_to_shop():
-                    print("    Slave goes to the shop !")
-                    print("    Slave's state: " + repr(slave))
+                    print("    Osoba poszła do sklepu !")
+                    print("    Stan osoby: " + repr(slave))
                     shopping_list = slave.prepare_shopping_list()
 
                     while not shopping_list.empty():
                         product_category = shopping_list.get()
-                        print("      Looking for products from category: " + product_category)
+                        print("      Osoba szuka produktu z kategorii: " + product_category)
 
                         products_that_slave_can_afford_atm = self._product_repository.find_by_category_and_max_price(product_category, slave.account_balance)
                         num_of_that_products = len(products_that_slave_can_afford_atm)
                         if num_of_that_products == 0:
-                            print("      There is no products slave can afford at the moment")
+                            print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
 
                         elif num_of_that_products == 1:
-                            print("      There is one product slave can afford at the moment")
+                            print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
                             product_to_buy = products_that_slave_can_afford_atm[0]
                             print("        " + repr(product_to_buy))
 
                             purchase_result = slave.buy_or_not_to_buy(product_to_buy)
 
                             if purchase_result == "BUY":
-                                print("        Slave bought the product !")
+                                print("        Osoba kupiła produkt !")
                             else:
-                                print("        Slave decided not to buy the product...")
+                                print("        Osoba zdecydowała się jednak go nie kupować...")
 
                         else:
-                            print("      There is more than one " + "[" + str(num_of_that_products) + "]" + " product slave can afford at the moment")
+                            print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
                             product_to_buy = \
                                 products_that_slave_can_afford_atm[random.randint(0, num_of_that_products - 1)]
 
-                            print("        Slave is thinking about this one: " + repr(product_to_buy))
+                            print("        Osoba bieże pod uwage tylko tą jedną: " + repr(product_to_buy))
 
                             purchase_result = slave.buy_or_not_to_buy(product_to_buy)
 
                             if purchase_result == "BUY":
-                                print("        Slave bought the product !")
+                                print("        Osoba kupiła produkt !")
                             else:
-                                print("        Slave decided not to buy the product...")
+                                print("        Osoba zdecydowała się jednak go nie kupować...")
 
-                    print("    Slave has finished shopping")
-                    print("    Slave's state: " + repr(slave))
+                    print("    Osoba skończyła zakupy")
+                    print("    Stan osoby: " + repr(slave))
                 else:
-                    print("    Slave does nothing...")
+                    print("    Osoba nie poszła do sklepu...")
 
                 self._actual_date += _day
-            print("End of the world for slave with id: " + slave.id)
+            print("Koniec świata dla osoby o id: " + slave.id)
 
     def reset(self):
-        print("World reset occurs")
+        print("Reset świata")
         self._actual_date = self._start_date
 
     def _will_go_to_shop(self):
@@ -217,7 +217,7 @@ class World:
         if event is None:
             return random.random() <= self._regular_go_to_shop_probability
         else:
-            print("    [probability bonus !]")
+            print("    [bonus prawdopodobienstwa !]")
             return random.random() <= event.go_to_shop_probability
 
     def _get_actual_event(self):
