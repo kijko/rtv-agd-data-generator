@@ -103,7 +103,7 @@ class Slave:
         needs_str += "]"
 
 
-        return "Slave: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + "]"
+        return "Osoba: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + "]"
 
 
 def _create_groups(population, profiles):
