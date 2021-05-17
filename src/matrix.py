@@ -24,9 +24,9 @@ class Matrix:
         for group in self.groups:
 
             print("Uruchomiono symulacje dla grupy: " + group.name)
-            while group.has_next_slave():
-                slave = group.next_slave()
-                world.start(slave)
+            while group.has_next_person():
+                person = group.next_person()
+                world.start(person)
                 world.reset()
 
 
@@ -39,20 +39,19 @@ class Group:
         self.needs = needs
         self.name = name
 
-    def has_next_slave(self):
+    def has_next_person(self):
         return self._actual_population < self._max_population
 
-    def next_slave(self):
-        if self.has_next_slave():
+    def next_person(self):
+        if self.has_next_person():
             self._actual_population += 1
-            slave = Slave(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to), self.needs)
 
-            return slave
+            return Person(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to), self.needs)
         else:
             return None
 
 
-class Slave:
+class Person:
     def __init__(self, number_in_group, group_name, salary, needs):
         self.id = group_name + "-" + str(number_in_group)
 
@@ -153,45 +152,45 @@ class World:
         self._events = events
         self._product_repository = product_repository
 
-    def start(self, slave):
+    def start(self, person):
         if self._actual_date == self._last_day_date:
             print("Świat się zakończył. Zresetuj go")
         else:
             needStr = ""
-            for need in slave.needs:
+            for need in person.needs:
                 needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.buy_probability) + "] "
 
-            print("Osoba z id: " + slave.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
+            print("Osoba z id: " + person.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
 
             while self._actual_date <= self._last_day_date:
                 actual_date_str = self._actual_date.strftime("%d-%m-%y")
                 print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
-                    slave.pay_the_paycheck()
-                    print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(slave.account_balance) + "]")
+                    person.pay_the_paycheck()
+                    print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
 
                 if self._will_go_to_shop():
                     print("    Osoba poszła do sklepu !")
-                    print("    Stan osoby: " + repr(slave))
-                    shopping_list = slave.prepare_shopping_list()
+                    print("    Stan osoby: " + repr(person))
+                    shopping_list = person.prepare_shopping_list()
                     buy_probability_bonus_multiplier = self._get_bonus_buy_probability_multiplier()
 
                     while not shopping_list.empty():
                         product_category = shopping_list.get()
                         print("      Osoba szuka produktu z kategorii: " + product_category)
 
-                        products_that_slave_can_afford_atm = self._product_repository.find_by_category_and_max_price(product_category, slave.account_balance)
-                        num_of_that_products = len(products_that_slave_can_afford_atm)
+                        products_that_person_can_afford_atm = self._product_repository.find_by_category_and_max_price(product_category, person.account_balance)
+                        num_of_that_products = len(products_that_person_can_afford_atm)
                         if num_of_that_products == 0:
                             print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
 
                         elif num_of_that_products == 1:
                             print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
-                            product_to_buy = products_that_slave_can_afford_atm[0]
+                            product_to_buy = products_that_person_can_afford_atm[0]
                             print("        " + repr(product_to_buy))
 
-                            purchase_result = slave.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
+                            purchase_result = person.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
 
                             if purchase_result == "BUY":
                                 print("        Osoba kupiła produkt !")
@@ -201,11 +200,11 @@ class World:
                         else:
                             print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
                             product_to_buy = \
-                                products_that_slave_can_afford_atm[random.randint(0, num_of_that_products - 1)]
+                                products_that_person_can_afford_atm[random.randint(0, num_of_that_products - 1)]
 
                             print("        Osoba bieże pod uwage tylko tą jedną: " + repr(product_to_buy))
 
-                            purchase_result = slave.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
+                            purchase_result = person.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
 
                             if purchase_result == "BUY":
                                 print("        Osoba kupiła produkt !")
@@ -213,12 +212,12 @@ class World:
                                 print("        Osoba zdecydowała się jednak go nie kupować...")
 
                     print("    Osoba skończyła zakupy")
-                    print("    Stan osoby: " + repr(slave))
+                    print("    Stan osoby: " + repr(person))
                 else:
                     print("    Osoba nie poszła do sklepu...")
 
                 self._actual_date += _day
-            print("Koniec świata dla osoby o id: " + slave.id)
+            print("Koniec świata dla osoby o id: " + person.id)
 
     def reset(self):
         print("Reset świata")
