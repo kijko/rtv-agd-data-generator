@@ -28,11 +28,11 @@ profiles:                                # ustawienia profili, dotyczące okreś
       - category: FRIDGE                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
         num_of_items: 1
         priority: 1
-        indecision_factor: 0.4
+        buy_probability: 0.6
       - category: TV                     # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
         num_of_items: 2
         priority: 2
-        indecision_factor: 0.6
+        buy_probability: 0.4
                                          # 0% na kupienie niczego (jak wyżej)
 
   - name: MIDDLE_CLASS                   # nazwa grupy (klasy spolecznej)
@@ -45,7 +45,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
       - category: GAME_CONSOLE           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
         num_of_items: 2
         priority: 1
-        indecision_factor: 0.6
+        buy_probability: 0.4
 
   - name: RICH_MEN                       # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
@@ -56,7 +56,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
       - category: GAME_CONSOLE           # 100 % na kupno konsoli (pod warunkiem że pójdzie do sklepu)
         num_of_items: 1
         priority: 1
-        indecision_factor: 0.6
+        buy_probability: 0.4
                                          # 0% na kupno niczego (napewno coś kupi)
 
 # NOTKA 1: Pensja jest losowana dla każdego na początku symulacji i pozostaje taka sama przez całą symulację

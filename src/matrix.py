@@ -79,12 +79,12 @@ class Slave:
     def buy_or_not_to_buy(self, product):
         need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
 
-        if random.random() <= need_of_product.indecision_factor:
-            return "NOT_TO_BUY"
-        else:
+        if random.random() <= need_of_product.buy_probability:
             self._satisfy_need(product, need_of_product)
 
             return "BUY"
+        else:
+            return "NOT_TO_BUY"
 
     def _satisfy_need(self, product, need_of_product):
         self.account_balance -= product.price
@@ -147,7 +147,7 @@ class World:
         else:
             needStr = ""
             for need in slave.needs:
-                needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.indecision_factor) + "] "
+                needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.buy_probability) + "] "
 
             print("Osoba z id: " + slave.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
 
@@ -278,11 +278,11 @@ class Event:
 
 
 class Need:
-    def __init__(self, category, num_of_items, priority, indecision_factor):
-        self.indecision_factor = indecision_factor
+    def __init__(self, category, num_of_items, priority, buy_probability):
+        self.buy_probability = buy_probability
         self.priority = priority
         self.num_of_items = num_of_items
         self.category = category
 
     def __repr__(self):
-        return "[" + self.category + ", " + str(self.num_of_items) + ", " + str(self.priority) + ", " + str(self.indecision_factor) + "]"
+        return "[" + self.category + ", " + str(self.num_of_items) + ", " + str(self.priority) + ", " + str(self.buy_probability) + "]"

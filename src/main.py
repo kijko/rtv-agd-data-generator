@@ -22,9 +22,9 @@ example_simulation = Matrix(
                 1000,
                 2000,
                 [
-                    Need("FRIDGE", 1, 1, 0.4),
-                    Need("TV", 2, 0, 0.6),
-                    Need("GAME_CONSOLE", 3, 2, 0.8)
+                    Need("FRIDGE", 1, 1, 0.6),
+                    Need("TV", 2, 0, 0.4),
+                    Need("GAME_CONSOLE", 3, 2, 0.2)
                 ]
             ),
             Profile(
@@ -33,7 +33,7 @@ example_simulation = Matrix(
                 3000,
                 5000,
                 [
-                    Need("GAME_CONSOLE", 2, 1, 0.6)
+                    Need("GAME_CONSOLE", 2, 1, 0.4)
                 ]
             ),
             Profile(
@@ -42,7 +42,7 @@ example_simulation = Matrix(
                 10000,
                 15000,
                 [
-                    Need("GAME_CONSOLE", 1, 1, 0.6)
+                    Need("GAME_CONSOLE", 1, 1, 0.4)
                 ]
             )
         ],
