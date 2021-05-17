@@ -217,8 +217,16 @@ class World:
         if event is None:
             return random.random() <= self._regular_go_to_shop_probability
         else:
-            print("    [bonus prawdopodobienstwa !]")
-            return random.random() <= event.go_to_shop_probability
+            gts_multiplier = event.go_to_shop_probability_multiplier
+            print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
+            bonus_probability = self._regular_go_to_shop_probability * gts_multiplier
+            print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
+
+            if bonus_probability >= 1.0:
+                print("    Napewno pójdzie do sklepu")
+                return True
+            else:
+                return random.random() <= bonus_probability
 
     def _get_actual_event(self):
         for event in self._events:
@@ -259,8 +267,9 @@ class Profile:
 
 
 class Event:
-    def __init__(self, day_from, month_from, day_to, month_to, year, go_to_shop_probability):
-        self.go_to_shop_probability = go_to_shop_probability
+    def __init__(self, day_from, month_from, day_to, month_to, year, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
+        self.buy_item_probability_multiplier = buy_item_probability_multiplier
+        self.go_to_shop_probability_multiplier = go_to_shop_probability_multiplier
         self._first_day = datetime.date(year, month_from, day_from)
         self._last_day = datetime.date(year, month_to, day_to)
 
