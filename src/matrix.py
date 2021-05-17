@@ -8,7 +8,8 @@ _day = datetime.timedelta(days=1)
 
 class Matrix:
 
-    def __init__(self, config):
+    def __init__(self, config, event_handler):
+        self._event_handler = event_handler
         self.config = config
         self.groups = _create_groups(config.global_settings.population, config.profiles)
 
@@ -26,6 +27,9 @@ class Matrix:
             print("Uruchomiono symulacje dla grupy: " + group.name)
             while group.has_next_person():
                 person = group.next_person()
+
+                self._event_handler.person_was_born(person)
+
                 world.start(person)
                 world.reset()
 
@@ -306,3 +310,10 @@ class Need:
 
     def __repr__(self):
         return "[" + self.category + ", " + str(self.num_of_items) + ", " + str(self.priority) + ", " + str(self.buy_probability) + "]"
+
+
+class MatrixEventHandler:
+
+    def person_was_born(self, person):
+        pass
+
