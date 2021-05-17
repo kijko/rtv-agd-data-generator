@@ -1,6 +1,7 @@
 from matrix import *
 import products
 import gui
+import dbgen
 
 example_simulation = Matrix(
     Configuration(
@@ -56,4 +57,5 @@ example_simulation = Matrix(
     )
 )
 
-gui.run_gui(lambda: example_simulation.run())
+# gui.run_gui(lambda: example_simulation.run())
+example_simulation.run()
