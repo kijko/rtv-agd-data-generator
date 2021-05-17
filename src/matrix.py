@@ -76,10 +76,22 @@ class Slave:
 
         return q
 
-    def buy_or_not_to_buy(self, product):
+    def buy_or_not_to_buy(self, product, special_event_multiplier):
         need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
 
-        if random.random() <= need_of_product.buy_probability:
+        buy_probability = need_of_product.buy_probability
+        if special_event_multiplier is not None:
+            print("      Prawdopodobieństwo kupna przedmiotu x" + str(special_event_multiplier))
+
+            calculated_buy_prob = buy_probability * special_event_multiplier
+            if calculated_buy_prob >= 1.0:
+                buy_probability = 1.0
+            else:
+                buy_probability = calculated_buy_prob
+
+        print("      Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
+
+        if random.random() <= buy_probability:
             self._satisfy_need(product, need_of_product)
 
             return "BUY"
@@ -163,6 +175,7 @@ class World:
                     print("    Osoba poszła do sklepu !")
                     print("    Stan osoby: " + repr(slave))
                     shopping_list = slave.prepare_shopping_list()
+                    buy_probability_bonus_multiplier = self._get_bonus_buy_probability_multiplier()
 
                     while not shopping_list.empty():
                         product_category = shopping_list.get()
@@ -178,7 +191,7 @@ class World:
                             product_to_buy = products_that_slave_can_afford_atm[0]
                             print("        " + repr(product_to_buy))
 
-                            purchase_result = slave.buy_or_not_to_buy(product_to_buy)
+                            purchase_result = slave.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
 
                             if purchase_result == "BUY":
                                 print("        Osoba kupiła produkt !")
@@ -192,7 +205,7 @@ class World:
 
                             print("        Osoba bieże pod uwage tylko tą jedną: " + repr(product_to_buy))
 
-                            purchase_result = slave.buy_or_not_to_buy(product_to_buy)
+                            purchase_result = slave.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
 
                             if purchase_result == "BUY":
                                 print("        Osoba kupiła produkt !")
@@ -234,6 +247,14 @@ class World:
                 return event
 
         return None
+
+    def _get_bonus_buy_probability_multiplier(self):
+        event = self._get_actual_event()
+
+        if event is None:
+            return None
+        else:
+            return event.buy_item_probability_multiplier
 
 
 
