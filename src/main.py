@@ -6,11 +6,11 @@ import dbgen
 
 def generate_big_data():
     available_products = [
-        products.Product("FRIDGE-1", 4999.99, "FRIDGE"),
-        products.Product("FRIDGE-2", 2499.89, "FRIDGE"),
-        products.Product("TV-1", 699.89, "TV"),
-        products.Product("TV-2", 6129.00, "TV"),
-        products.Product("TV-3", 8192.99, "TV")
+        products.Product(1, "FRIDGE-1", 4999.99, "FRIDGE"),
+        products.Product(2, "FRIDGE-2", 2499.89, "FRIDGE"),
+        products.Product(3, "TV-1", 699.89, "TV"),
+        products.Product(4, "TV-2", 6129.00, "TV"),
+        products.Product(5, "TV-3", 8192.99, "TV")
     ]
 
     events = [Event(10, 4, 15, 4, 2021, 10, 2), Event(5, 5, 5, 5, 2021, 4, 5)]

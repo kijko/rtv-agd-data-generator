@@ -4,19 +4,17 @@ import datetime
 from matrix import MatrixEventHandler
 
 
+# noinspection SqlNoDataSourceInspection
 class Database:
     def __init__(self, products):
-        # init schema, add products to db, etc
         self._connection = None
         self._cursor = None
         try:
+
             self._connection = sqlite3.connect("../dev-data/" + _prepare_db_name())
-            sqlite_create_table_query = "CREATE TABLE example (id INTEGER PRIMARY KEY);"
-
             self._cursor = self._connection.cursor()
-            self._cursor.execute(sqlite_create_table_query)
 
-            self._connection.commit()
+            self._init_db(products)
 
         except sqlite3.Error as error:
             print("Error while creating a sqlite table", error)
@@ -27,6 +25,24 @@ class Database:
             if self._cursor is not None:
                 self._cursor.close()
                 print("cursor is closed")
+
+    def _init_db(self, products):
+        create_product_table_sql = """
+            CREATE TABLE product (
+                id          INTEGER   PRIMARY KEY   NOT NULL,
+                name        TEXT                    NOT NULL,
+                price       REAL                    NOT NULL,
+                category    TEXT                    NOT NULL
+            );
+        """
+        self._cursor.execute(create_product_table_sql)
+
+        insert_product = """INSERT INTO product(id, name, price, category) VALUES(?, ?, ?, ?)"""
+
+        for product in products:
+            self._cursor.execute(insert_product, (product.id, product.name, product.price, product.category))
+
+        self._connection.commit()
 
     def get_collector(self):
         return DbDataCollector()

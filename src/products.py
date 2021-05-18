@@ -8,15 +8,13 @@ class ProductRepository:
         return list(filter(lambda product: product.category == category and product.price <= max_price, list_copy))
 
 
-
-
-
 class Product:
-    def __init__(self, name, price, category):
+    def __init__(self, identity, name, price, category):
+        self.id = identity
         self.category = category
         self.price = price
         self.name = name
 
     def __repr__(self):
-        return "Product: [" + self.category + ", " + self.name + ", " + str(self.price) + "]"
+        return "Product: [" + str(self.id) + ", " + self.category + ", " + self.name + ", " + str(self.price) + "]"
 
