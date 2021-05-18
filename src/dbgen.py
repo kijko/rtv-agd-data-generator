@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 
 from matrix import MatrixEventHandler
 
@@ -9,15 +10,13 @@ class Database:
         self._connection = None
         self._cursor = None
         try:
-            self._connection = sqlite3.connect('../dev-data/SQLite_Python.db')
+            self._connection = sqlite3.connect("../dev-data/" + _prepare_db_name())
             sqlite_create_table_query = "CREATE TABLE example (id INTEGER PRIMARY KEY);"
 
             self._cursor = self._connection.cursor()
             self._cursor.execute(sqlite_create_table_query)
 
             self._connection.commit()
-
-            self._cursor.close()
 
         except sqlite3.Error as error:
             print("Error while creating a sqlite table", error)
@@ -35,6 +34,12 @@ class Database:
     def end(self):
         self._cursor.close()
         self._connection.close()
+
+
+def _prepare_db_name():
+    datetime_stamp = datetime.datetime.now().strftime("%d-%m-%y_%H-%M-%S-%f")
+
+    return "generated_" + datetime_stamp + ".db"
 
 
 class DbDataCollector(MatrixEventHandler):
