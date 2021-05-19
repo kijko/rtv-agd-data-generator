@@ -27,15 +27,14 @@ class Database:
                 print("cursor is closed")
 
     def _init_db(self, products):
-        create_product_table_sql = """
-            CREATE TABLE product (
-                id          INTEGER   PRIMARY KEY   NOT NULL,
-                name        TEXT                    NOT NULL,
-                price       REAL                    NOT NULL,
-                category    TEXT                    NOT NULL
-            );
-        """
-        self._cursor.execute(create_product_table_sql)
+        fd = open("./schema.sql", "r")
+        schema_sql = fd.read()
+        fd.close()
+
+        schema_commands = schema_sql.split(";")
+
+        for command in schema_commands:
+            self._cursor.execute(command)
 
         insert_product = """INSERT INTO product(id, name, price, category) VALUES(?, ?, ?, ?)"""
 
