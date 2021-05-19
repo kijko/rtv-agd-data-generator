@@ -313,7 +313,27 @@ class Need:
 
 
 class MatrixEventHandler:
-
     def person_was_born(self, person):
+        pass
+
+    def day_begins(self, sim_datetime):
+        pass
+
+    def payday(self, person, sim_datetime):
+        pass
+
+    def went_to_shop(self, person, sim_datetime):
+        pass
+
+    def do_not_went_to_shop(self, person, sim_datetime):
+        pass
+
+    def shopping(self, person, sim_datetime, bought_products):
+        pass
+
+    def bought_nothing(self, person, sim_datetime):
+        pass
+
+    def person_died(self, person_data):
         pass
 
