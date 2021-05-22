@@ -18,10 +18,10 @@ def generate_big_data():
     global_settings = GlobalSettings(1, 6, 2021, 10, events)
 
     poor_guys_needs = [Need("FRIDGE", 1, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2)]
-    poor_guys_profile = Profile("POOR", 18, 1000, 2000, poor_guys_needs, 0.05)
+    poor_guys_profile = Profile("POOR", 18, 1000, 1000, 2000, poor_guys_needs, 0.05)
 
-    middle_class_profile = Profile("MIDDLE_CLASS", 61, 3000, 5000, [Need("GAME_CONSOLE", 2, 1, 0.4)], 0.04)
-    rich_man_profile = Profile("RICH_MEN", 21, 10000, 15000, [Need("GAME_CONSOLE", 1, 1, 0.4)], 0.03)
+    middle_class_profile = Profile("MIDDLE_CLASS", 61, 2000, 3000, 5000, [Need("GAME_CONSOLE", 2, 1, 0.4)], 0.04)
+    rich_man_profile = Profile("RICH_MEN", 21, 3000, 10000, 15000, [Need("GAME_CONSOLE", 1, 1, 0.4)], 0.03)
 
     profiles = [poor_guys_profile, middle_class_profile, rich_man_profile]
 

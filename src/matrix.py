@@ -34,7 +34,8 @@ class Matrix:
 
 
 class Group:
-    def __init__(self, name, population, salary_from, salary_to, needs, go_to_shop_probability):
+    def __init__(self, name, population, initial_account_balance, salary_from, salary_to, needs, go_to_shop_probability):
+        self.initial_account_balance = initial_account_balance
         self._salary_to = salary_to
         self._salary_from = salary_from
         self._max_population = population
@@ -50,19 +51,19 @@ class Group:
         if self.has_next_person():
             self._actual_population += 1
 
-            return Person(self._actual_population, self, random.randint(self._salary_from, self._salary_to), self.needs)
+            return Person(self._actual_population, self, random.randint(self._salary_from, self._salary_to), self.needs, self.initial_account_balance)
         else:
             return None
 
 
 class Person:
-    def __init__(self, number_in_group, group, salary, needs):
+    def __init__(self, number_in_group, group, salary, needs, account_balance):
         self.id = group.name + "-" + str(number_in_group)
 
         self._salary = salary
         self.needs = needs
 
-        self.account_balance = 0.0
+        self.account_balance = account_balance
         self.go_to_shop_probability = group.go_to_shop_probability
 
     def pay_the_paycheck(self):
@@ -165,6 +166,7 @@ def _create_groups(population, profiles):
             Group(
                 profile.name,
                 calculate_group_population(profile.percent_of_people),
+                profile.initial_account_balance,
                 profile.salary_from,
                 profile.salary_to,
                 profile.needs,
@@ -304,7 +306,8 @@ class GlobalSettings:
 
 
 class Profile:
-    def __init__(self, name, percent_of_people, salary_from, salary_to, needs, go_to_shop_probability):
+    def __init__(self, name, percent_of_people, initial_account_balance, salary_from, salary_to, needs, go_to_shop_probability):
+        self.initial_account_balance = initial_account_balance
         self.salary_to = salary_to
         self.salary_from = salary_from
         self.percent_of_people = percent_of_people

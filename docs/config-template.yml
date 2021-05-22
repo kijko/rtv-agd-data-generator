@@ -21,6 +21,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
   - name: POOR                           # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
+    initial_account_balance: 1000
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 1000
       to: 2000
@@ -38,7 +39,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
   - name: MIDDLE_CLASS                   # nazwa grupy (klasy spolecznej)
     percent_of_people: 60                # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
-    social_group: MIDDLE_CLASS           # nazwa klasy społecznej
+    initial_account_balance: 2000
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 3000
       to: 5000
@@ -51,6 +52,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
   - name: RICH_MEN                       # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
+    initial_account_balance: 3000
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 10000
       to: 15000
