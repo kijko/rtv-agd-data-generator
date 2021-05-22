@@ -4,7 +4,6 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
     start_month: JANUARY                 # pierwszy miesiąc symulacji
     end_month: JUNE                      # ostatni miesiąc symulacji
     year: 2020                           # rok symulacji
-    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     events:                              # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
       - from: 10.04                      # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 15.04                        # jest 10 razy większe (0.05 x 10 = 0.5).
@@ -21,6 +20,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 profiles:                                # ustawienia profili, dotyczące określonej części ludzi
   - name: POOR                           # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 1000
       to: 2000
@@ -37,6 +37,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
 
   - name: MIDDLE_CLASS                   # nazwa grupy (klasy spolecznej)
     percent_of_people: 60                # jaki procent całości stanowi dana grupa
+    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     social_group: MIDDLE_CLASS           # nazwa klasy społecznej
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 3000
@@ -49,6 +50,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
 
   - name: RICH_MEN                       # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 10000
       to: 15000

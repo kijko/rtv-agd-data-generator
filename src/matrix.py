@@ -18,7 +18,6 @@ class Matrix:
             self.config.global_settings.start_month,
             self.config.global_settings.end_month,
             self.config.global_settings.year,
-            self.config.global_settings.daily_go_to_shop_probability,
             self.config.global_settings.events,
             self.config.product_repository
         )
@@ -35,13 +34,14 @@ class Matrix:
 
 
 class Group:
-    def __init__(self, name, population, salary_from, salary_to, needs):
+    def __init__(self, name, population, salary_from, salary_to, needs, go_to_shop_probability):
         self._salary_to = salary_to
         self._salary_from = salary_from
         self._max_population = population
         self._actual_population = 0
         self.needs = needs
         self.name = name
+        self.go_to_shop_probability = go_to_shop_probability
 
     def has_next_person(self):
         return self._actual_population < self._max_population
@@ -50,19 +50,20 @@ class Group:
         if self.has_next_person():
             self._actual_population += 1
 
-            return Person(self._actual_population, self.name, random.randint(self._salary_from, self._salary_to), self.needs)
+            return Person(self._actual_population, self, random.randint(self._salary_from, self._salary_to), self.needs)
         else:
             return None
 
 
 class Person:
-    def __init__(self, number_in_group, group_name, salary, needs):
-        self.id = group_name + "-" + str(number_in_group)
+    def __init__(self, number_in_group, group, salary, needs):
+        self.id = group.name + "-" + str(number_in_group)
 
         self._salary = salary
         self.needs = needs
 
         self.account_balance = 0.0
+        self.go_to_shop_probability = group.go_to_shop_probability
 
     def pay_the_paycheck(self):
         self.account_balance += self._salary
@@ -140,7 +141,8 @@ def _create_groups(population, profiles):
                 calculate_group_population(profile.percent_of_people),
                 profile.salary_from,
                 profile.salary_to,
-                profile.needs
+                profile.needs,
+                profile.go_to_shop_probability
             )
         )
 
@@ -148,8 +150,7 @@ def _create_groups(population, profiles):
 
 
 class World:
-    def __init__(self, start_month, end_month, year, regular_go_to_shop_probability, events, product_repository):
-        self._regular_go_to_shop_probability = regular_go_to_shop_probability
+    def __init__(self, start_month, end_month, year, events, product_repository):
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
@@ -174,7 +175,8 @@ class World:
                     person.pay_the_paycheck()
                     print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
 
-                if self._will_go_to_shop():
+                print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
+                if self._will_go_to_shop(person):
                     print("    Osoba poszła do sklepu !")
                     print("    Stan osoby: " + repr(person))
                     shopping_list = person.prepare_shopping_list()
@@ -227,15 +229,15 @@ class World:
         print("Reset świata")
         self._actual_date = self._start_date
 
-    def _will_go_to_shop(self):
+    def _will_go_to_shop(self, person):
         event = self._get_actual_event()
 
         if event is None:
-            return random.random() <= self._regular_go_to_shop_probability
+            return random.random() <= person.go_to_shop_probability
         else:
             gts_multiplier = event.go_to_shop_probability_multiplier
             print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
-            bonus_probability = self._regular_go_to_shop_probability * gts_multiplier
+            bonus_probability = person.go_to_shop_probability * gts_multiplier
             print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
 
             if bonus_probability >= 1.0:
@@ -260,10 +262,6 @@ class World:
             return event.buy_item_probability_multiplier
 
 
-
-
-
-
 class Configuration:
     def __init__(self, global_settings, profiles, product_repository):
         self.global_settings = global_settings
@@ -272,9 +270,8 @@ class Configuration:
 
 
 class GlobalSettings:
-    def __init__(self, start_month, end_month, year, population, daily_go_to_shop_probability, events):
+    def __init__(self, start_month, end_month, year, population, events):
         self.events = events
-        self.daily_go_to_shop_probability = daily_go_to_shop_probability
         self.population = population
         self.year = year
         self.end_month = end_month
@@ -282,10 +279,11 @@ class GlobalSettings:
 
 
 class Profile:
-    def __init__(self, name, percent_of_people, salary_from, salary_to, needs):
+    def __init__(self, name, percent_of_people, salary_from, salary_to, needs, go_to_shop_probability):
         self.salary_to = salary_to
         self.salary_from = salary_from
         self.percent_of_people = percent_of_people
+        self.go_to_shop_probability = go_to_shop_probability
         self.name = name
         self.needs = needs
 
