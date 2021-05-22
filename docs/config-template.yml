@@ -16,7 +16,26 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         probability_multipliers:
           go_to_shop: 4
           buy_item: 2
+    needs_associations:
+      - need: WIRELESS-GAMEPAD
+        associated_with: BATTERIES
+        association_type: HIGHLY_ASSOCIATED # think about batteries every time when put pad to cart. If has money buy with 0.8 prob
+        relation: ONE_FOR_ONE # relation BATTERIES -> GAMEPAD. For example Netflix could be ONE_TO_MANY. it's about cancel proposition because person already has something
+        buy_probability: 0.8 # probability he needs batteries
+      - need: TV
+        associated_with: NETFLIX_SUB
+        association_type: ASSOCIATED # it's proposed by shop before finalization
+        relation: ONE_TO_MANY # if person have netflix, he doesn't need more
+        buy_probability: 0.5
+      - need: FRIDGE
+        associated_with: WASHING_MACHINE
+        association_type: LOOSELY_ASSOCIATED # it's proposed after purchase somehow. For ex. SMS, EMAIL. It increases go_to_shop probability for defined time
+        relation: NONE
+        bonus_in_days: 14
 
+# Highly associate - main product requires associated one to be functional
+# Associated - associated product is frequently used with the main one, but it's not required for main one to be functional
+# Loosely associated - associated product is not used with main one at all but sometimes they are bought together. For example if people are buying AGD for brand new flat
 profiles:                                # ustawienia profili, dotyczące określonej części ludzi
   - name: POOR                           # nazwa grupy (klasy spolecznej)
     percent_of_people: 20                # jaki procent całości stanowi dana grupa
