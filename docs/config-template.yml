@@ -4,7 +4,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
     start_month: JANUARY                 # pierwszy miesiąc symulacji
     end_month: JUNE                      # ostatni miesiąc symulacji
     year: 2020                           # rok symulacji
-    events:                              # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
+    date_probability_bonus:              # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
       - from: 10.04                      # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 15.04                        # jest 10 razy większe (0.05 x 10 = 0.5).
         probability_multipliers:         # A prawdopodobieństwo kupienia przedmiotu jest 5 razy większe

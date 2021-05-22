@@ -18,7 +18,7 @@ class Matrix:
             self.config.global_settings.start_month,
             self.config.global_settings.end_month,
             self.config.global_settings.year,
-            self.config.global_settings.events,
+            self.config.global_settings.date_probability_bonuses,
             self.config.product_repository
         )
         for group in self.groups:
@@ -150,11 +150,11 @@ def _create_groups(population, profiles):
 
 
 class World:
-    def __init__(self, start_month, end_month, year, events, product_repository):
+    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository):
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
-        self._events = events
+        self._date_probability_bonuses = date_probability_bonuses
         self._product_repository = product_repository
 
     def start(self, person):
@@ -247,9 +247,9 @@ class World:
                 return random.random() <= bonus_probability
 
     def _get_actual_event(self):
-        for event in self._events:
-            if event.is_event_date(self._actual_date):
-                return event
+        for bonus in self._date_probability_bonuses:
+            if bonus.date_has_bonus(self._actual_date):
+                return bonus
 
         return None
 
@@ -270,8 +270,8 @@ class Configuration:
 
 
 class GlobalSettings:
-    def __init__(self, start_month, end_month, year, population, events):
-        self.events = events
+    def __init__(self, start_month, end_month, year, population, date_probability_bonuses):
+        self.date_probability_bonuses = date_probability_bonuses
         self.population = population
         self.year = year
         self.end_month = end_month
@@ -288,14 +288,14 @@ class Profile:
         self.needs = needs
 
 
-class Event:
+class DateProbabilityBonus:
     def __init__(self, day_from, month_from, day_to, month_to, year, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
         self.buy_item_probability_multiplier = buy_item_probability_multiplier
         self.go_to_shop_probability_multiplier = go_to_shop_probability_multiplier
         self._first_day = datetime.date(year, month_from, day_from)
         self._last_day = datetime.date(year, month_to, day_to)
 
-    def is_event_date(self, date):
+    def date_has_bonus(self, date):
         return self._first_day <= date <= self._last_day
 
 

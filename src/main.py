@@ -13,7 +13,7 @@ def generate_big_data():
         products.Product(5, "TV-3", 8192.99, "TV")
     ]
 
-    events = [Event(10, 4, 15, 4, 2021, 10, 2), Event(5, 5, 5, 5, 2021, 4, 5)]
+    events = [DateProbabilityBonus(10, 4, 15, 4, 2021, 10, 2), DateProbabilityBonus(5, 5, 5, 5, 2021, 4, 5)]
 
     global_settings = GlobalSettings(1, 6, 2021, 10, events)
 
@@ -38,7 +38,7 @@ def generate_big_data():
     db.end()
 
 
-gui.run_gui(lambda: generate_big_data())
+# gui.run_gui(lambda: generate_big_data())
 
 
-# generate_big_data()
+generate_big_data()
