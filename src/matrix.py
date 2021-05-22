@@ -80,29 +80,40 @@ class Person:
 
         return q
 
-    def buy_or_not_to_buy(self, product, special_event_multiplier):
+    def take_shopping_cart(self):
+        return ShoppingCart()
+
+    def calculate_remaining_budget(self, shopping_cart):
+        remaining_budget = self.account_balance - shopping_cart.cost()
+
+        if remaining_budget <= 0.0:
+            return 0.0
+        else:
+            return remaining_budget
+
+    def does_he_want_it(self, product, probability_multiplier):
         need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
 
         buy_probability = need_of_product.buy_probability
-        if special_event_multiplier is not None:
-            print("      Prawdopodobieństwo kupna przedmiotu x" + str(special_event_multiplier))
+        if probability_multiplier is not None:
+            print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
 
-            calculated_buy_prob = buy_probability * special_event_multiplier
+            calculated_buy_prob = buy_probability * probability_multiplier
             if calculated_buy_prob >= 1.0:
                 buy_probability = 1.0
             else:
                 buy_probability = calculated_buy_prob
 
-        print("      Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
+        print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
 
-        if random.random() <= buy_probability:
-            self._satisfy_need(product, need_of_product)
+        return random.random() <= buy_probability
 
-            return "BUY"
-        else:
-            return "NOT_TO_BUY"
+    def buy_things(self, shopping_cart):
+        for product in shopping_cart.products:
+            self._satisfy_need(product)
 
-    def _satisfy_need(self, product, need_of_product):
+    def _satisfy_need(self, product):
+        need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
         self.account_balance -= product.price
 
         if need_of_product.num_of_items > 1:
@@ -120,6 +131,21 @@ class Person:
 
 
         return "Osoba: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + "]"
+
+
+class ShoppingCart:
+    def __init__(self):
+        self.products = []
+
+    def cost(self):
+        products_cost = 0.0
+        for product in self.products:
+            products_cost += product.price
+
+        return products_cost
+
+    def place_product(self, product):
+        self.products.append(product)
 
 
 def _create_groups(population, profiles):
@@ -182,41 +208,40 @@ class World:
                     shopping_list = person.prepare_shopping_list()
                     buy_probability_bonus_multiplier = self._get_bonus_buy_probability_multiplier()
 
+                    shopping_cart = person.take_shopping_cart()
+
                     while not shopping_list.empty():
                         product_category = shopping_list.get()
                         print("      Osoba szuka produktu z kategorii: " + product_category)
 
-                        products_that_person_can_afford_atm = self._product_repository.find_by_category_and_max_price(product_category, person.account_balance)
+                        remaining_budget = person.calculate_remaining_budget(shopping_cart)
+                        products_that_person_can_afford_atm = \
+                            self._product_repository.find_by_category_and_max_price(product_category, remaining_budget)
                         num_of_that_products = len(products_that_person_can_afford_atm)
-                        if num_of_that_products == 0:
-                            print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
+                        if num_of_that_products > 0:
+                            product_to_buy = None
 
-                        elif num_of_that_products == 1:
-                            print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
-                            product_to_buy = products_that_person_can_afford_atm[0]
-                            print("        " + repr(product_to_buy))
-
-                            purchase_result = person.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
-
-                            if purchase_result == "BUY":
-                                print("        Osoba kupiła produkt !")
+                            if num_of_that_products == 1:
+                                print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
+                                product_to_buy = products_that_person_can_afford_atm[0]
+                                print("        " + repr(product_to_buy))
                             else:
-                                print("        Osoba zdecydowała się jednak go nie kupować...")
+                                print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
+                                product_to_buy = \
+                                    products_that_person_can_afford_atm[random.randint(0, num_of_that_products - 1)]
+                                print("        Osoba bieże pod uwage tylko ten jeden: " + repr(product_to_buy))
+
+                            if person.does_he_want_it(product_to_buy, buy_probability_bonus_multiplier):
+                                shopping_cart.place_product(product_to_buy)
+                                print("        Osoba umieściła produkt w koszyku!")
+                            else:
+                                print("        Osoba zrezygnowała z kupna przedmiotu...")
 
                         else:
-                            print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
-                            product_to_buy = \
-                                products_that_person_can_afford_atm[random.randint(0, num_of_that_products - 1)]
+                            print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
 
-                            print("        Osoba bieże pod uwage tylko tą jedną: " + repr(product_to_buy))
-
-                            purchase_result = person.buy_or_not_to_buy(product_to_buy, buy_probability_bonus_multiplier)
-
-                            if purchase_result == "BUY":
-                                print("        Osoba kupiła produkt !")
-                            else:
-                                print("        Osoba zdecydowała się jednak go nie kupować...")
-
+                    print("    Osoba idzie do kasy...")
+                    person.buy_things(shopping_cart)
                     print("    Osoba skończyła zakupy")
                     print("    Stan osoby: " + repr(person))
                 else:
@@ -230,12 +255,12 @@ class World:
         self._actual_date = self._start_date
 
     def _will_go_to_shop(self, person):
-        event = self._get_actual_event()
+        bonus = self._get_actual_bonus()
 
-        if event is None:
+        if bonus is None:
             return random.random() <= person.go_to_shop_probability
         else:
-            gts_multiplier = event.go_to_shop_probability_multiplier
+            gts_multiplier = bonus.go_to_shop_probability_multiplier
             print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
             bonus_probability = person.go_to_shop_probability * gts_multiplier
             print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
@@ -246,7 +271,7 @@ class World:
             else:
                 return random.random() <= bonus_probability
 
-    def _get_actual_event(self):
+    def _get_actual_bonus(self):
         for bonus in self._date_probability_bonuses:
             if bonus.date_has_bonus(self._actual_date):
                 return bonus
@@ -254,12 +279,12 @@ class World:
         return None
 
     def _get_bonus_buy_probability_multiplier(self):
-        event = self._get_actual_event()
+        bonus = self._get_actual_bonus()
 
-        if event is None:
+        if bonus is None:
             return None
         else:
-            return event.buy_item_probability_multiplier
+            return bonus.buy_item_probability_multiplier
 
 
 class Configuration:
