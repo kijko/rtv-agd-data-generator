@@ -65,6 +65,7 @@ class Person:
 
         self.account_balance = account_balance
         self.go_to_shop_probability = group.go_to_shop_probability
+        self._belongings = []
 
     def pay_the_paycheck(self):
         self.account_balance += self._salary
@@ -121,6 +122,8 @@ class Person:
             need_of_product.num_of_items -= 1
         else:
             self.needs = list(filter(lambda need: need.category != need_of_product.category, self.needs.copy()))
+
+        self._belongings.append(product)
 
     def __repr__(self):
         needs_str = "["
