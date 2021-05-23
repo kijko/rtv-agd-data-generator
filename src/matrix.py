@@ -257,14 +257,36 @@ class ConsideringContext:
         return ConsideringContext(products, self.person, self.shopping_cart, self.buy_probability_bonus_multiplier)
 
 
+class MarketingOffer:
+    def __init__(self, product_category, catch_probability, buy_probability):
+        self.buy_probability = buy_probability
+        self.catch_probability = catch_probability
+        self.product_category = product_category
+
+    def __repr__(self):
+        return "MarketingOffer_[" + self.product_category + ", " + str(self.catch_probability) + ", " + str(self.buy_probability) + "]"
+
+
+class NotificationBox:
+    def __init__(self):
+        pass
+
+    def flush(self):
+        pass
+
+    def show_on_time(self, date, offer):
+        pass
+
+
 class World:
     def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations):
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
         self._date_probability_bonuses = date_probability_bonuses
-        self._product_repository = product_repository # todo move to persuader
+        self._product_repository = product_repository
         self._needs_associations = needs_associations
+        self._notification_box = NotificationBox()
 
     def start(self, person):
         if self._actual_date == self._last_day_date:
@@ -283,6 +305,8 @@ class World:
                 if self._actual_date.day == 1:
                     person.pay_the_paycheck()
                     print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
+
+                # self._process_notifications(person)
 
                 print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
                 if self._will_go_to_shop(person):
@@ -338,12 +362,64 @@ class World:
 
                     person.buy_things(shopping_cart)
                     print("    Osoba zakończyła zakupy")
+
+                    print("    Przetwarzanie zakupionych produktów w celu wysyłki powiązanych propozycji/promocji kanałami marketingowymi")
+                    self._process_bought_products(shopping_cart)
+
                     print("    Stan osoby: " + repr(person))
                 else:
                     print("    Osoba nie poszła do sklepu...")
 
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
+
+    # def _process_notifications(self, person):
+    #     print("    Przetwarzanie otrzymanych ofert")
+    #
+    #     notifications = self._notification_box.get_for_date(self._actual_date)
+    #
+    #     print("    Otrzymano " + notifications.count() + " ofert marketingowych")
+    #
+    #     while notifications.has_next():
+    #         marketing_offer = notifications.next()
+    #
+    #         print("    Przetwarzanie oferty: " + repr(marketing_offer))
+    #
+    #         if random.random() <= marketing_offer.catch_probability:
+    #             print("    Osoba złapała przynęte !")
+    #             person.catch_marketing_offer(marketing_offer)
+    #         else:
+    #             print("    Osoba nie jest zainteresowana ofertą")
+
+    def _process_bought_products(self, shopping_cart):
+        for product in shopping_cart.products:
+            print("      Wyszukiwanie powiązań " + str(LooselyCoupledAssociation) + " dla produktu: " + repr(product))
+            loosely_coupled_associations = \
+                self._find_associations_by_product_category_and_association_type(product.category, LooselyCoupledAssociation)
+            num_of_asses = len(loosely_coupled_associations)
+
+            if num_of_asses > 0:
+                print("        Znaleziono " + str(num_of_asses) + " powiązań. Przygotowywanie oferty marketingowej")
+
+                for ass in loosely_coupled_associations:
+                    print("    Przetwarzanie powiązania " + str(LooselyCoupledAssociation))
+                    date_when_person_receive_offer = \
+                        datetime.date(self._actual_date.year, self._actual_date.month, self._actual_date.day) + (_day * random.randint(1, 7))
+                    offer = MarketingOffer(
+                        ass.product_category_b,
+                        ass.need_probability,
+                        ass.buy_probability
+                    )
+
+                    self._notification_box.show_on_time(date_when_person_receive_offer, offer)
+
+                    print("        Wysłano ofertę marketingową: " + repr(offer))
+
+                    date_when_person_receive_offer_str = date_when_person_receive_offer.strftime("%d-%m-%y")
+                    print("        Zostanie ona odebrana przez osobę dnia: " + date_when_person_receive_offer_str)
+
+            else:
+                print("        Brak powiązań.")
 
     # association_type -> only types that inherit from ShoppingStageAssociation
     def _consider_associated_products_purchase(self, association_type, considering_context):
@@ -420,6 +496,7 @@ class World:
     def reset(self):
         print("Reset świata")
         self._actual_date = self._start_date
+        self._notification_box.flush()
 
     def _will_go_to_shop(self, person):
         bonus = self._get_actual_bonus()
