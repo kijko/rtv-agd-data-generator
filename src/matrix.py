@@ -330,6 +330,7 @@ class World:
 
                     print("    Osoba idzie do kasy...")
 
+                    print("    Kasjer proponuje co mu kazali")
                     self._consider_associated_products_purchase(
                         Association,
                         ConsideringContext(shopping_cart.products, person, shopping_cart, buy_probability_bonus_multiplier)
@@ -344,6 +345,7 @@ class World:
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
 
+    # association_type -> only types that inherit from ShoppingStageAssociation
     def _consider_associated_products_purchase(self, association_type, considering_context):
         print("          Analiza powiązanych kategorii dla produktów: " + ", ".join(map(lambda prd: repr(prd), considering_context.products)))
         print("          Typ powiązania: " + str(association_type))
