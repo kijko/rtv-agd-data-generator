@@ -19,7 +19,8 @@ class Matrix:
             self.config.global_settings.end_month,
             self.config.global_settings.year,
             self.config.global_settings.date_probability_bonuses,
-            self.config.product_repository
+            self.config.product_repository,
+            self.config.global_settings.needs_associations
         )
         for group in self.groups:
 
@@ -110,19 +111,70 @@ class Person:
 
         return random.random() <= buy_probability
 
+    def does_he_need_associated_product(self, association, shopping_cart):
+        a = association.product_category_a
+        b = association.product_category_b
+        relation_between_them = association.relation
+
+        if relation_between_them == one_to_one:
+            print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do jednego")
+            num_of_a_we_have = self._count_belongings_include_shopping_cart_by_category(a, shopping_cart)
+            num_of_b_we_have = self._count_belongings_include_shopping_cart_by_category(b, shopping_cart)
+
+            print("            Osoba posiada " + str(num_of_a_we_have) + " produktów z kategorii " + a + " oraz " + str(num_of_b_we_have) + " produktów z kategorii " + b)
+
+            have = num_of_b_we_have < num_of_a_we_have
+            if have:
+                print("            Osoba uznaje że potrzebuje produkt z kategorii " + b)
+            else:
+                print("            Osoba uznaje, że nie potrzebuje produktu z kategorii " + b + " ponieważ już go posiada (w domu lub w koszyku)")
+
+            return have
+        else: # one to many todo
+            print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do wielu")
+            num_of_b_we_have = self._count_belongings_include_shopping_cart_by_category(b, shopping_cart)
+
+            return num_of_b_we_have == 0
+
+    def _count_belongings_include_shopping_cart_by_category(self, category, shopping_cart):
+        list_copy = self._belongings.copy()
+        list_copy.extend(shopping_cart.products)
+
+        return len(list(filter(lambda product: product.category == category, list_copy)))
+
+    def does_he_want_associated_product(self, association, probability_multiplier):
+        buy_probability = association.buy_probability
+        if probability_multiplier is not None:
+            print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
+
+            calculated_buy_prob = buy_probability * probability_multiplier
+            if calculated_buy_prob >= 1.0:
+                buy_probability = 1.0
+            else:
+                buy_probability = calculated_buy_prob
+
+        print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
+
+        return random.random() <= buy_probability
+
     def buy_things(self, shopping_cart):
-        for product in shopping_cart.products:
-            self._satisfy_need(product)
+        for needed_product in shopping_cart.needed_products:
+            self._buy(needed_product)
+            self._satisfy_need(needed_product)
+
+        for not_needed_product in shopping_cart.not_needed_products:
+            self._buy(not_needed_product)
 
     def _satisfy_need(self, product):
         need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
-        self.account_balance -= product.price
 
         if need_of_product.num_of_items > 1:
             need_of_product.num_of_items -= 1
         else:
             self.needs = list(filter(lambda need: need.category != need_of_product.category, self.needs.copy()))
 
+    def _buy(self, product):
+        self.account_balance -= product.price
         self._belongings.append(product)
 
     def __repr__(self):
@@ -133,13 +185,22 @@ class Person:
 
         needs_str += "]"
 
+        belongings_str = "["
 
-        return "Osoba: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + "]"
+        for product in self._belongings:
+            belongings_str += repr(product) + ", "
+
+        belongings_str += "]"
+
+
+        return "Osoba: [id=" + self.id + ", salary=" + str(self._salary) + ", needs=" + needs_str + ", acc_balance=" + str(self.account_balance) + ", belongings=" + belongings_str + "]"
 
 
 class ShoppingCart:
     def __init__(self):
         self.products = []
+        self.needed_products = []
+        self.not_needed_products = []
 
     def cost(self):
         products_cost = 0.0
@@ -148,8 +209,13 @@ class ShoppingCart:
 
         return products_cost
 
-    def place_product(self, product):
+    def place_needed_product(self, product):
         self.products.append(product)
+        self.needed_products.append(product)
+
+    def place_not_needed_product(self, product):
+        self.products.append(product)
+        self.not_needed_products.append(product)
 
 
 def _create_groups(population, profiles):
@@ -181,12 +247,13 @@ def _create_groups(population, profiles):
 
 
 class World:
-    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository):
+    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations):
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
         self._date_probability_bonuses = date_probability_bonuses
-        self._product_repository = product_repository
+        self._product_repository = product_repository # todo move to persuader
+        self._needs_associations = needs_associations
 
     def start(self, person):
         if self._actual_date == self._last_day_date:
@@ -237,8 +304,10 @@ class World:
                                 print("        Osoba bieże pod uwage tylko ten jeden: " + repr(product_to_buy))
 
                             if person.does_he_want_it(product_to_buy, buy_probability_bonus_multiplier):
-                                shopping_cart.place_product(product_to_buy)
+                                shopping_cart.place_needed_product(product_to_buy)
                                 print("        Osoba umieściła produkt w koszyku!")
+
+                                self._on_product_bought(person, shopping_cart, product_to_buy, buy_probability_bonus_multiplier)
                             else:
                                 print("        Osoba zrezygnowała z kupna przedmiotu...")
 
@@ -247,13 +316,65 @@ class World:
 
                     print("    Osoba idzie do kasy...")
                     person.buy_things(shopping_cart)
-                    print("    Osoba skończyła zakupy")
+                    print("    Osoba zakończyła zakupy")
                     print("    Stan osoby: " + repr(person))
                 else:
                     print("    Osoba nie poszła do sklepu...")
 
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
+
+    def _on_product_bought(self, person, shopping_cart, bought_product, buy_prob_bonus_multiplier):
+        print("          Wyszukiwanie silnych powiązań dla kategorii: " + bought_product.category)
+        strong_associations = self._find_strong_associations_for_prod_category(bought_product.category)
+
+        if len(strong_associations) > 0:
+            associated_categories_str = ", ".join(map(lambda associ: associ.product_category_b, strong_associations))
+            print("          Znaleziono powiązania z kategoriami: " + associated_categories_str)
+
+            for ass in strong_associations:
+                associated_category = ass.product_category_b
+                print("          Analiza powiązania z kategorią: " + associated_category)
+                remaining_budget = person.calculate_remaining_budget(shopping_cart)
+
+                if person.does_he_need_associated_product(ass, shopping_cart):
+                    print("          Osoba potrzebuje produktu z silnie powiązanej kategorii " + associated_category)
+                    print("          I jej budżet wynosi: " + str(remaining_budget))
+
+                    associated_category_products_that_person_can_afford_atm = \
+                        self._product_repository.find_by_category_and_max_price(associated_category, remaining_budget)
+                    num_of_that_products = len(associated_category_products_that_person_can_afford_atm)
+
+                    if num_of_that_products > 0:
+                        print("          Znaleziono " + str(num_of_that_products) + " produktów z powiązanej kategorii")
+                        product_index = random.randint(0, num_of_that_products - 1)
+                        product_to_buy = associated_category_products_that_person_can_afford_atm[product_index]
+
+                        print("          Wybrano produkt: " + repr(product_to_buy))
+
+                        if person.does_he_want_associated_product(ass, buy_prob_bonus_multiplier):
+                            print("          Kupuje to !")
+                            shopping_cart.place_not_needed_product(product_to_buy)
+
+                            print("          Wyszukiwanie dalszych powiązań dla kategorii: " + product_to_buy.category)
+                            self._on_product_bought(person, shopping_cart, product_to_buy, buy_prob_bonus_multiplier)
+                        else:
+                            print("          Osoba zdecydowała się jednak go nie kupować...")
+
+                    else:
+                        print("          Nie znaleziono produktów z kategorii " + associated_category)
+
+                else:
+                    print("          Osoba niepotrzebuje produktu z silnie powiązanej kategorii " + associated_category)
+
+
+        else:
+            print("          Brak silnie powiązanych produktów dla kategorii " + bought_product.category)
+
+    def _find_strong_associations_for_prod_category(self, category):
+        list_copy = self._needs_associations.copy()
+
+        return list(filter(lambda association: association.product_category_a == category, list_copy))
 
     def reset(self):
         print("Reset świata")
@@ -300,7 +421,8 @@ class Configuration:
 
 
 class GlobalSettings:
-    def __init__(self, start_month, end_month, year, population, date_probability_bonuses):
+    def __init__(self, start_month, end_month, year, population, date_probability_bonuses, needs_associations):
+        self.needs_associations = needs_associations
         self.date_probability_bonuses = date_probability_bonuses
         self.population = population
         self.year = year
@@ -365,4 +487,16 @@ class MatrixEventHandler:
 
     def person_died(self, person_data):
         pass
+
+
+one_to_one = "ONE_TO_ONE"
+one_to_many = "ONE_TO_MANY"
+
+
+class StrongAssociation:
+    def __init__(self, product_category_a, product_category_b, relation, buy_probability):
+        self.buy_probability = buy_probability
+        self.relation = relation
+        self.product_category_b = product_category_b
+        self.product_category_a = product_category_a
 

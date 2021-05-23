@@ -29,9 +29,9 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         buy_probability: 0.5
       - need: FRIDGE
         associated_with: WASHING_MACHINE
-        association_type: LOOSELY_ASSOCIATED # it's proposed after purchase somehow. For ex. SMS, EMAIL. It increases go_to_shop probability for defined time
-        relation: NONE
-        bonus_in_days: 14
+        association_type: LOOSELY_ASSOCIATED # WASHING MACHINE is proposed in 1-7 days after buy FRIDGE.
+        need_probability: 0.2 #person will add it to needs with prob 0.2
+        buy_probability: 0.6 # if person will add need
 
 # Highly associate - main product requires associated one to be functional
 # Associated - associated product is frequently used with the main one, but it's not required for main one to be functional
