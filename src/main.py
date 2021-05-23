@@ -17,7 +17,8 @@ def generate_big_data():
         products.Product(9, "Lavazza 500g", 24.89, "COFFEE"),
         products.Product(10, "iPhone 15S", 799.99, "PHONE"),
         products.Product(11, "iPhone special phone charger", 299.00, "PHONE-CHARGER"),
-        products.Product(12, "iPhone USB Cable", 89.00, "PHONE-CABLE")
+        products.Product(12, "iPhone USB Cable", 89.00, "PHONE-CABLE"),
+        products.Product(13, "Netflix subscribtion", 39.99, "STREAMING-SERVICE-SUB")
     ]
 
     date_bonuses = [DateProbabilityBonus(10, 4, 15, 4, 2021, 10, 2), DateProbabilityBonus(5, 5, 5, 5, 2021, 4, 5)]
@@ -27,7 +28,8 @@ def generate_big_data():
         StrongAssociation("COFFEE-MACHINE", "COFFEE", one_to_many, 0.5),
         StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.7),
         StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 1),
-        StrongAssociation("PHONE", "PHONE-CABLE", one_to_one, 0.9)
+        StrongAssociation("PHONE", "PHONE-CABLE", one_to_one, 0.9),
+        Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.6)
     ]
 
     global_settings = GlobalSettings(1, 6, 2021, 10, date_bonuses, needs_associations)

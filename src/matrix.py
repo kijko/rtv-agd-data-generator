@@ -374,7 +374,13 @@ class World:
     def _find_strong_associations_for_prod_category(self, category):
         list_copy = self._needs_associations.copy()
 
-        return list(filter(lambda association: association.product_category_a == category, list_copy))
+        return list(
+            filter(
+                lambda association:
+                isinstance(association, StrongAssociation) and association.product_category_a == category,
+                list_copy
+            )
+        )
 
     def reset(self):
         print("Reset świata")
@@ -493,10 +499,31 @@ one_to_one = "ONE_TO_ONE"
 one_to_many = "ONE_TO_MANY"
 
 
-class StrongAssociation:
-    def __init__(self, product_category_a, product_category_b, relation, buy_probability):
-        self.buy_probability = buy_probability
-        self.relation = relation
+class BaseAssociation:
+    def __init__(self, product_category_a, product_category_b):
         self.product_category_b = product_category_b
         self.product_category_a = product_category_a
 
+
+class ShoppingStageAssociation(BaseAssociation):
+    def __init__(self, product_category_a, product_category_b, relation, buy_probability):
+        super().__init__(product_category_a, product_category_b)
+        self.buy_probability = buy_probability
+        self.relation = relation
+
+
+class StrongAssociation(ShoppingStageAssociation):
+    def __init__(self, product_category_a, product_category_b, relation, buy_probability):
+        super().__init__(product_category_a, product_category_b, relation, buy_probability)
+
+
+class Association(ShoppingStageAssociation):
+    def __init__(self, product_category_a, product_category_b, relation, buy_probability):
+        super().__init__(product_category_a, product_category_b, relation, buy_probability)
+
+
+class LooselyCoupledAssociation(BaseAssociation):
+    def __init__(self, product_category_a, product_category_b, need_probability, buy_probability):
+        super().__init__(product_category_a, product_category_b)
+        self.buy_probability = buy_probability
+        self.need_probability = need_probability
