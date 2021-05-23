@@ -16,5 +16,5 @@ class Product:
         self.name = name
 
     def __repr__(self):
-        return "Product: [" + str(self.id) + ", " + self.category + ", " + self.name + ", " + str(self.price) + "]"
+        return "[" + str(self.id) + ", " + self.category + ", " + self.name + ", " + str(self.price) + "]"
 

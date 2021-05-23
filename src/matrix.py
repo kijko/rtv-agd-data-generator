@@ -246,6 +246,17 @@ def _create_groups(population, profiles):
     return groups
 
 
+class ConsideringContext:
+    def __init__(self, products, person, shopping_cart, buy_probability_bonus_multiplier):
+        self.products = products
+        self.buy_probability_bonus_multiplier = buy_probability_bonus_multiplier
+        self.shopping_cart = shopping_cart
+        self.person = person
+
+    def recreate_with_other_products(self, products):
+        return ConsideringContext(products, self.person, self.shopping_cart, self.buy_probability_bonus_multiplier)
+
+
 class World:
     def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations):
         self._start_date = datetime.date(year, start_month, 1)
@@ -307,7 +318,10 @@ class World:
                                 shopping_cart.place_needed_product(product_to_buy)
                                 print("        Osoba umieściła produkt w koszyku!")
 
-                                self._on_product_bought(person, shopping_cart, product_to_buy, buy_probability_bonus_multiplier)
+                                self._consider_associated_products_purchase(
+                                    StrongAssociation,
+                                    ConsideringContext([product_to_buy], person, shopping_cart, buy_probability_bonus_multiplier)
+                                )
                             else:
                                 print("        Osoba zrezygnowała z kupna przedmiotu...")
 
@@ -315,6 +329,12 @@ class World:
                             print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
 
                     print("    Osoba idzie do kasy...")
+
+                    self._consider_associated_products_purchase(
+                        Association,
+                        ConsideringContext(shopping_cart.products, person, shopping_cart, buy_probability_bonus_multiplier)
+                    )
+
                     person.buy_things(shopping_cart)
                     print("    Osoba zakończyła zakupy")
                     print("    Stan osoby: " + repr(person))
@@ -324,60 +344,73 @@ class World:
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
 
-    def _on_product_bought(self, person, shopping_cart, bought_product, buy_prob_bonus_multiplier):
-        print("          Wyszukiwanie silnych powiązań dla kategorii: " + bought_product.category)
-        strong_associations = self._find_strong_associations_for_prod_category(bought_product.category)
+    def _consider_associated_products_purchase(self, association_type, considering_context):
+        print("          Analiza powiązanych kategorii dla produktów: " + ", ".join(map(lambda prd: repr(prd), considering_context.products)))
+        print("          Typ powiązania: " + str(association_type))
 
-        if len(strong_associations) > 0:
-            associated_categories_str = ", ".join(map(lambda associ: associ.product_category_b, strong_associations))
-            print("          Znaleziono powiązania z kategoriami: " + associated_categories_str)
+        for product in considering_context.products:
+            print("          Analiza powiązań dla produktu: " + repr(product))
+            associations = \
+                self._find_associations_by_product_category_and_association_type(product.category, association_type)
+            num_of_associations = len(associations)
 
-            for ass in strong_associations:
-                associated_category = ass.product_category_b
-                print("          Analiza powiązania z kategorią: " + associated_category)
-                remaining_budget = person.calculate_remaining_budget(shopping_cart)
+            if num_of_associations > 0:
+                associated_categories_str = ", ".join(map(lambda associ: associ.product_category_b, associations))
+                print("          Znaleziono powiązania z kategoriami: " + associated_categories_str)
 
-                if person.does_he_need_associated_product(ass, shopping_cart):
-                    print("          Osoba potrzebuje produktu z silnie powiązanej kategorii " + associated_category)
-                    print("          I jej budżet wynosi: " + str(remaining_budget))
+                for ass in associations:
+                    associated_category = ass.product_category_b
 
-                    associated_category_products_that_person_can_afford_atm = \
-                        self._product_repository.find_by_category_and_max_price(associated_category, remaining_budget)
-                    num_of_that_products = len(associated_category_products_that_person_can_afford_atm)
+                    print("          Analiza powiązania z kategorią: " + associated_category)
 
-                    if num_of_that_products > 0:
-                        print("          Znaleziono " + str(num_of_that_products) + " produktów z powiązanej kategorii")
-                        product_index = random.randint(0, num_of_that_products - 1)
-                        product_to_buy = associated_category_products_that_person_can_afford_atm[product_index]
+                    person = considering_context.person
+                    shopping_cart = considering_context.shopping_cart
+                    remaining_budget = person.calculate_remaining_budget(shopping_cart)
 
-                        print("          Wybrano produkt: " + repr(product_to_buy))
+                    if person.does_he_need_associated_product(ass, shopping_cart):
+                        print("          Osoba potrzebuje produktu z powiązanej kategorii " + associated_category)
+                        print("          Aktualny budżet wynosi: " + str(remaining_budget))
 
-                        if person.does_he_want_associated_product(ass, buy_prob_bonus_multiplier):
-                            print("          Kupuje to !")
-                            shopping_cart.place_not_needed_product(product_to_buy)
+                        associated_category_products_that_person_can_afford_atm = \
+                            self._product_repository.find_by_category_and_max_price(associated_category, remaining_budget)
+                        num_of_that_products = len(associated_category_products_that_person_can_afford_atm)
 
-                            print("          Wyszukiwanie dalszych powiązań dla kategorii: " + product_to_buy.category)
-                            self._on_product_bought(person, shopping_cart, product_to_buy, buy_prob_bonus_multiplier)
+                        if num_of_that_products > 0:
+                            print("          Znaleziono " + str(num_of_that_products) + " produktów z powiązanej kategorii")
+                            product_index = random.randint(0, num_of_that_products - 1)
+                            product_to_buy = associated_category_products_that_person_can_afford_atm[product_index]
+
+                            print("          Wybrano produkt: " + repr(product_to_buy))
+
+                            buy_prob_bonus_multiplier = considering_context.buy_probability_bonus_multiplier
+                            if person.does_he_want_associated_product(ass, buy_prob_bonus_multiplier):
+                                print("          Kupuje to !")
+                                shopping_cart.place_not_needed_product(product_to_buy)
+
+                                print("          Wyszukiwanie dalszych powiązań dla kategorii: " + product_to_buy.category)
+                                self._consider_associated_products_purchase(
+                                    association_type,
+                                    considering_context.recreate_with_other_products([product_to_buy])
+                                )
+                            else:
+                                print("          Osoba zdecydowała się jednak go nie kupować...")
+
                         else:
-                            print("          Osoba zdecydowała się jednak go nie kupować...")
+                            print("          Nie znaleziono produktów z kategorii " + associated_category)
 
                     else:
-                        print("          Nie znaleziono produktów z kategorii " + associated_category)
+                        print("          Osoba niepotrzebuje produktu z powiązanej kategorii " + associated_category)
 
-                else:
-                    print("          Osoba niepotrzebuje produktu z silnie powiązanej kategorii " + associated_category)
+            else:
+                print("          Brak powiązań typu: " + str(association_type) + " dla kategorii " + product.category)
 
-
-        else:
-            print("          Brak silnie powiązanych produktów dla kategorii " + bought_product.category)
-
-    def _find_strong_associations_for_prod_category(self, category):
+    def _find_associations_by_product_category_and_association_type(self, category, association_type):
         list_copy = self._needs_associations.copy()
 
         return list(
             filter(
                 lambda association:
-                isinstance(association, StrongAssociation) and association.product_category_a == category,
+                isinstance(association, association_type) and association.product_category_a == category,
                 list_copy
             )
         )

@@ -26,10 +26,9 @@ def generate_big_data():
     needs_associations = [
         StrongAssociation("WIRELESS-GAMEPAD", "AAA-BATTERIES", one_to_one, 0.8),
         StrongAssociation("COFFEE-MACHINE", "COFFEE", one_to_many, 0.5),
-        StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.7),
-        StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 1),
-        StrongAssociation("PHONE", "PHONE-CABLE", one_to_one, 0.9),
-        Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.6)
+        StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.4),
+        StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 0.3),
+        Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.9)
     ]
 
     global_settings = GlobalSettings(1, 6, 2021, 10, date_bonuses, needs_associations)
@@ -55,7 +54,7 @@ def generate_big_data():
     db.end()
 
 
-# gui.run_gui(lambda: generate_big_data())
+gui.run_gui(lambda: generate_big_data())
 
 
-generate_big_data()
+# generate_big_data()
