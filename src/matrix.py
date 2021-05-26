@@ -5,6 +5,10 @@ import queue
 
 _day = datetime.timedelta(days=1)
 
+def _date_str(date):
+    return date.strftime("%d-%m-%y")
+
+
 
 class Matrix:
 
@@ -85,6 +89,11 @@ class Person:
 
     def take_shopping_cart(self):
         return ShoppingCart()
+
+    def catch_marketing_offer(self, marketing_offer):
+        self.needs.append(
+            Need(marketing_offer.product_category, 1, random.randint(-100, 100), marketing_offer.buy_probability)
+        )
 
     def calculate_remaining_budget(self, shopping_cart):
         remaining_budget = self.account_balance - shopping_cart.cost()
@@ -269,13 +278,28 @@ class MarketingOffer:
 
 class NotificationBox:
     def __init__(self):
-        pass
+        self._date_to_notifications = {}
 
     def flush(self):
-        pass
+        self._date_to_notifications.clear()
+
+    def get_for_date(self, date):
+        key = _date_str(date)
+
+        if key in self._date_to_notifications:
+            return self._date_to_notifications.pop(key)
+        else:
+            return None
 
     def show_on_time(self, date, offer):
-        pass
+        key = _date_str(date)
+
+        if key in self._date_to_notifications:
+            self._date_to_notifications[key].append(offer)
+        else:
+            self._date_to_notifications[key] = [offer]
+
+        print("    Oferta marketingowa przygotowana do wysłania ", self._date_to_notifications)
 
 
 class World:
@@ -299,14 +323,14 @@ class World:
             print("Osoba z id: " + person.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
 
             while self._actual_date <= self._last_day_date:
-                actual_date_str = self._actual_date.strftime("%d-%m-%y")
+                actual_date_str = _date_str(self._actual_date)
                 print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
                     person.pay_the_paycheck()
                     print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
 
-                # self._process_notifications(person)
+                self._process_notifications(person)
 
                 print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
                 if self._will_go_to_shop(person):
@@ -373,23 +397,23 @@ class World:
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
 
-    # def _process_notifications(self, person):
-    #     print("    Przetwarzanie otrzymanych ofert")
-    #
-    #     notifications = self._notification_box.get_for_date(self._actual_date)
-    #
-    #     print("    Otrzymano " + notifications.count() + " ofert marketingowych")
-    #
-    #     while notifications.has_next():
-    #         marketing_offer = notifications.next()
-    #
-    #         print("    Przetwarzanie oferty: " + repr(marketing_offer))
-    #
-    #         if random.random() <= marketing_offer.catch_probability:
-    #             print("    Osoba złapała przynęte !")
-    #             person.catch_marketing_offer(marketing_offer)
-    #         else:
-    #             print("    Osoba nie jest zainteresowana ofertą")
+    def _process_notifications(self, person):
+        print("    Przetwarzanie otrzymanych ofert")
+
+        notifications = self._notification_box.get_for_date(self._actual_date)
+
+        if notifications is None:
+            print("    Brak ofert")
+        else:
+            print("    Otrzymano " + str(len(notifications)) + " ofert marketingowych")
+
+            for notification in notifications:
+                print("      Przetwarzanie oferty: " + repr(notification))
+                if random.random() <= notification.catch_probability:
+                    print("    Osoba złapała przynęte !")
+                    person.catch_marketing_offer(notification)
+                else:
+                    print("    Osoba nie jest zainteresowana ofertą")
 
     def _process_bought_products(self, shopping_cart):
         for product in shopping_cart.products:
@@ -403,8 +427,11 @@ class World:
 
                 for ass in loosely_coupled_associations:
                     print("    Przetwarzanie powiązania " + str(LooselyCoupledAssociation))
+                    one_to_seven_days = _day * random.randint(1, 7)
+
                     date_when_person_receive_offer = \
-                        datetime.date(self._actual_date.year, self._actual_date.month, self._actual_date.day) + (_day * random.randint(1, 7))
+                        datetime.date(self._actual_date.year, self._actual_date.month, self._actual_date.day) \
+                        + one_to_seven_days
                     offer = MarketingOffer(
                         ass.product_category_b,
                         ass.need_probability,
@@ -415,7 +442,7 @@ class World:
 
                     print("        Wysłano ofertę marketingową: " + repr(offer))
 
-                    date_when_person_receive_offer_str = date_when_person_receive_offer.strftime("%d-%m-%y")
+                    date_when_person_receive_offer_str = _date_str(date_when_person_receive_offer)
                     print("        Zostanie ona odebrana przez osobę dnia: " + date_when_person_receive_offer_str)
 
             else:

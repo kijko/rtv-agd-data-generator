@@ -30,7 +30,9 @@ def generate_big_data():
         StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.4),
         StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 0.3),
         Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.9),
-        LooselyCoupledAssociation("FRIDGE", "WASHING_MACHINE", 0.3, 0.6)
+        LooselyCoupledAssociation("FRIDGE", "WASHING_MACHINE", 0.8, 0.6),
+        LooselyCoupledAssociation("TV", "FRIDGE", 0.8, 0.6),
+        LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
     ]
 
     global_settings = GlobalSettings(1, 6, 2021, 10, date_bonuses, needs_associations)
