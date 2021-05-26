@@ -167,20 +167,23 @@ class Person:
         return random.random() <= buy_probability
 
     def buy_things(self, shopping_cart):
-        for needed_product in shopping_cart.needed_products:
-            self._buy(needed_product)
-            self._satisfy_need(needed_product)
-
-        for not_needed_product in shopping_cart.not_needed_products:
-            self._buy(not_needed_product)
+        for product in shopping_cart.products:
+            self._buy(product)
+            self._satisfy_need(product)
 
     def _satisfy_need(self, product):
-        need_of_product = list(filter(lambda need: need.category == product.category, self.needs.copy()))[0]
+        found_needs = list(filter(lambda need: need.category == product.category, self.needs.copy()))
 
-        if need_of_product.num_of_items > 1:
-            need_of_product.num_of_items -= 1
+        if len(found_needs) > 0:
+            need_of_product = found_needs[0]
+
+            if need_of_product.num_of_items > 1:
+                need_of_product.num_of_items -= 1
+            else:
+                self.needs = list(filter(lambda need: need.category != need_of_product.category, self.needs.copy()))
         else:
-            self.needs = list(filter(lambda need: need.category != need_of_product.category, self.needs.copy()))
+            pass
+
 
     def _buy(self, product):
         self.account_balance -= product.price
