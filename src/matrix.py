@@ -91,9 +91,36 @@ class Person:
         return ShoppingCart()
 
     def catch_marketing_offer(self, marketing_offer):
-        self.needs.append(
-            Need(marketing_offer.product_category, 1, random.randint(-100, 100), marketing_offer.buy_probability)
-        )
+        print("      Wdrażanie złapanej oferty marketingowej")
+
+        needs_from_category = self._needs_from_category(marketing_offer.product_category)
+
+        if len(needs_from_category) > 0:
+            print("        Osoba ma już potrzebę kupna produktu z kategorii: " + marketing_offer.product_category)
+            corresponding_need = needs_from_category[0]
+
+            if random.random() <= 0.5:
+                print("        Prawdopodobieństwo kupna przedmiotu zostało zwiększone o 50% !")
+
+                half_of_prob = corresponding_need.buy_probability / 2
+                new_probability = corresponding_need.buy_probability + half_of_prob
+
+                if new_probability >= 1.0:
+                    corresponding_need.buy_probability = 1.0
+                else:
+                    corresponding_need.buy_probability = new_probability
+            else:
+                print("        Liczba przedmiotów z kategorii " + marketing_offer.product_category + " które osoba chciałaby kupić została zwiększona o 1 !")
+                corresponding_need.num_of_items += 1
+
+        else:
+            print("        Osoba nie myślała wcześniej o kupnie przedmiotu z kategorii " + marketing_offer.product_category + ". Dodawanie nowej potrzeby")
+            self.needs.append(
+                Need(marketing_offer.product_category, 1, random.randint(-100, 100), marketing_offer.buy_probability)
+            )
+
+    def _needs_from_category(self, category):
+        return list(filter(lambda need: need.category == category, self.needs.copy()))
 
     def calculate_remaining_budget(self, shopping_cart):
         remaining_budget = self.account_balance - shopping_cart.cost()
@@ -139,7 +166,7 @@ class Person:
                 print("            Osoba uznaje, że nie potrzebuje produktu z kategorii " + b + " ponieważ już go posiada (w domu lub w koszyku)")
 
             return have
-        else: # one to many todo
+        else:
             print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do wielu")
             num_of_b_we_have = self._count_belongings_include_shopping_cart_by_category(b, shopping_cart)
 
