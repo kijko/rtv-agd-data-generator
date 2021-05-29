@@ -5,9 +5,9 @@ import queue
 
 _day = datetime.timedelta(days=1)
 
+
 def _date_str(date):
     return date.strftime("%d-%m-%y")
-
 
 
 class Matrix:
@@ -24,7 +24,8 @@ class Matrix:
             self.config.global_settings.year,
             self.config.global_settings.date_probability_bonuses,
             self.config.product_repository,
-            self.config.global_settings.needs_associations
+            self.config.global_settings.needs_associations,
+            self._event_handler
         )
         for group in self.groups:
 
@@ -333,7 +334,8 @@ class NotificationBox:
 
 
 class World:
-    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations):
+    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations, event_handler):
+        self._event_handler = event_handler
         self._start_date = datetime.date(year, start_month, 1)
         self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
         self._actual_date = self._start_date
@@ -364,6 +366,8 @@ class World:
 
                 print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
                 if self._will_go_to_shop(person):
+                    self._event_handler.went_to_shop(person, self._actual_date)
+
                     print("    Osoba poszła do sklepu !")
                     print("    Stan osoby: " + repr(person))
                     shopping_list = person.prepare_shopping_list()
@@ -415,6 +419,9 @@ class World:
                     )
 
                     person.buy_things(shopping_cart)
+
+                    self._event_handler.shopping(person, self._actual_date, shopping_cart.products.copy())
+
                     print("    Osoba zakończyła zakupy")
 
                     print("    Przetwarzanie zakupionych produktów w celu wysyłki powiązanych propozycji/promocji kanałami marketingowymi")
@@ -426,6 +433,7 @@ class World:
 
                 self._actual_date += _day
             print("Koniec świata dla osoby o id: " + person.id)
+            self._event_handler.person_died(person)
 
     def _process_notifications(self, person):
         print("    Przetwarzanie otrzymanych ofert")
@@ -642,25 +650,13 @@ class MatrixEventHandler:
     def person_was_born(self, person):
         pass
 
-    def day_begins(self, sim_datetime):
-        pass
-
-    def payday(self, person, sim_datetime):
-        pass
-
     def went_to_shop(self, person, sim_datetime):
-        pass
-
-    def do_not_went_to_shop(self, person, sim_datetime):
         pass
 
     def shopping(self, person, sim_datetime, bought_products):
         pass
 
-    def bought_nothing(self, person, sim_datetime):
-        pass
-
-    def person_died(self, person_data):
+    def person_died(self, person):
         pass
 
 

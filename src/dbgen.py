@@ -60,25 +60,15 @@ def _prepare_db_name():
 class DbDataCollector(MatrixEventHandler):
 
     def person_was_born(self, person):
-        print("** Zdarzenie ** - Utworzono nową osobę - " + repr(person))
-
-    def day_begins(self, sim_datetime):
-        pass
-
-    def payday(self, person, sim_datetime):
-        pass
+        print("************* Zdarzenie ************ - Utworzono nową osobę - " + repr(person))
 
     def went_to_shop(self, person, sim_datetime):
-        pass
-
-    def do_not_went_to_shop(self, person, sim_datetime):
-        pass
+        print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
+              + sim_datetime.strftime("%d-%m-%y") + " " + repr(person))
 
     def shopping(self, person, sim_datetime, bought_products):
-        pass
+        print("************* Zdarzenie ************ - ZAKUPKI ! "
+              + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
 
-    def bought_nothing(self, person, sim_datetime):
-        pass
-
-    def person_died(self, person_data):
-        pass
+    def person_died(self, person):
+        print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
