@@ -6,7 +6,8 @@ CREATE TABLE customer
     email         TEXT                NOT NULL,
     password_hash TEXT                NOT NULL,
     phone_number  TEXT                NOT NULL,
-    created_at    DATETIME            NOT NULL
+    created_at    DATETIME            NOT NULL,
+    group_name    TEXT                NOT NULL
 );
 CREATE INDEX customer_email ON customer (email);
 
