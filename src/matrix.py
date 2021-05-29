@@ -65,6 +65,7 @@ class Group:
 class Person:
     def __init__(self, number_in_group, group, salary, needs, account_balance):
         self.id = group.name + "-" + str(number_in_group)
+        self.group_name = group.name
 
         self._salary = salary
         self.needs = needs

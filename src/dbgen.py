@@ -1,8 +1,14 @@
 import sqlite3
 import datetime
 import uuid
+import hashlib
+import random
+import string
 
 from matrix import MatrixEventHandler
+from faker import Faker
+
+fake = Faker()
 
 
 # noinspection SqlNoDataSourceInspection
@@ -58,6 +64,23 @@ def _prepare_db_name():
     return "generated_" + datetime_stamp + ".db"
 
 
+def generate_fake_password_hash():
+    pw = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(10))
+    hash = hashlib.md5(pw.encode())
+
+    return hash.hexdigest()
+
+def generate_fake_payment_method():
+    one_two_or_three = random.randint(1, 3)
+
+    if one_two_or_three == 1:
+        return "CASH"
+    elif one_two_or_three == 2:
+        return "CARD"
+    else:
+        return "CREDIT"
+
+
 class DbDataCollector(MatrixEventHandler):
 
     def __init__(self, connection, cursor):
@@ -70,13 +93,22 @@ class DbDataCollector(MatrixEventHandler):
         insert_customer_sql = """INSERT INTO customer(id, first_name, last_name, email, password_hash, phone_number, created_at, group_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"""
 
         self._cursor.execute(insert_customer_sql, (person.id,
-                                                   "jan",
-                                                   "kowalski",
-                                                   "email",
-                                                   "password",
-                                                   "997",
-                                                   datetime.datetime.now(),
-                                                   "group"))
+                                                   fake.first_name(),
+                                                   fake.last_name(),
+                                                   fake.ascii_safe_email(),
+                                                   generate_fake_password_hash(),
+                                                   fake.phone_number(),
+                                                   fake.date_time(),
+                                                   person.group_name))
+
+        insert_address_sql = """ INSERT INTO address(customer_id, country, city, street, apartment) VALUES(?, ?, ?, ?, ?) """
+
+        self._cursor.execute(insert_address_sql, (person.id,
+                                                  fake.country(),
+                                                  fake.city(),
+                                                  fake.street_name(),
+                                                  fake.building_number()))
+
 
     def went_to_shop(self, person, sim_datetime):
         print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
@@ -99,7 +131,7 @@ class DbDataCollector(MatrixEventHandler):
         insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
 
         order_id = str(uuid.uuid4())
-        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, "CASH", visit[0]))
+        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, generate_fake_payment_method(), visit[0]))
 
         insert_product_to_order_sql = """ INSERT INTO ordered_product(product_id, order_id) VALUES(?, ?)"""
 

@@ -13,7 +13,7 @@ CREATE INDEX customer_email ON customer (email);
 
 CREATE TABLE address
 (
-    customer_id INTEGER PRIMARY KEY NOT NULL,
+    customer_id TEXT    PRIMARY KEY NOT NULL,
     country     TEXT                NOT NULL,
     city        TEXT                NOT NULL,
     street      TEXT                NOT NULL,
