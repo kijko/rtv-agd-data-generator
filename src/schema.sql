@@ -33,8 +33,8 @@ CREATE TABLE customer_order
     id           TEXT PRIMARY KEY NOT NULL,
     created_at   DATETIME         NOT NULL,
     payment_type TEXT             NOT NULL,
-    customer_id  INTEGER          NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer (id)
+    visit_id     INTEGER          NOT NULL,
+    FOREIGN KEY (visit_id) REFERENCES visit (id)
 );
 
 CREATE TABLE product
