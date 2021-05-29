@@ -2,7 +2,7 @@ from matrix import *
 import products
 import gui
 import dbgen
-
+# todo main-prod/main-dev
 
 def generate_big_data():
     available_products = [
