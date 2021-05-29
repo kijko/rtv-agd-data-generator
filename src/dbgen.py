@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import uuid
 
 from matrix import MatrixEventHandler
 
@@ -44,7 +45,7 @@ class Database:
         self._connection.commit()
 
     def get_collector(self):
-        return DbDataCollector()
+        return DbDataCollector(self._connection, self._cursor)
 
     def end(self):
         self._cursor.close()
@@ -59,16 +60,52 @@ def _prepare_db_name():
 
 class DbDataCollector(MatrixEventHandler):
 
+    def __init__(self, connection, cursor):
+        self._connection = connection
+        self._cursor = cursor
+
     def person_was_born(self, person):
         print("************* Zdarzenie ************ - Utworzono nową osobę - " + repr(person))
+
+        insert_customer_sql = """INSERT INTO customer(id, first_name, last_name, email, password_hash, phone_number, created_at, group_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"""
+
+        self._cursor.execute(insert_customer_sql, (person.id,
+                                                   "jan",
+                                                   "kowalski",
+                                                   "email",
+                                                   "password",
+                                                   "997",
+                                                   datetime.datetime.now(),
+                                                   "group"))
 
     def went_to_shop(self, person, sim_datetime):
         print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
               + sim_datetime.strftime("%d-%m-%y") + " " + repr(person))
 
+        insert_visit_sql = """ INSERT INTO visit(customer_id, visit_at) VALUES(?, ?)"""
+
+        self._cursor.execute(insert_visit_sql, (person.id, sim_datetime))
+
     def shopping(self, person, sim_datetime, bought_products):
         print("************* Zdarzenie ************ - ZAKUPKI ! "
               + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
 
+        select_last_visit_sql = """ SELECT id, MAX(visit_at) FROM visit WHERE customer_id = ?"""
+
+        self._cursor.execute(select_last_visit_sql, (person.id,))
+
+        visit = self._cursor.fetchall()[0]
+
+        insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
+
+        order_id = str(uuid.uuid4())
+        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, "CASH", visit[0]))
+
+        insert_product_to_order_sql = """ INSERT INTO ordered_product(product_id, order_id) VALUES(?, ?)"""
+
+        for product in bought_products:
+            self._cursor.execute(insert_product_to_order_sql, (product.id, order_id))
+
     def person_died(self, person):
         print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
+        self._connection.commit()

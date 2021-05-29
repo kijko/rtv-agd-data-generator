@@ -1,6 +1,6 @@
 CREATE TABLE customer
 (
-    id            INTEGER PRIMARY KEY NOT NULL,
+    id            TEXT    PRIMARY KEY NOT NULL,
     first_name    TEXT                NOT NULL,
     last_name     TEXT                NOT NULL,
     email         TEXT                NOT NULL,
@@ -23,9 +23,9 @@ CREATE TABLE address
 
 CREATE TABLE visit
 (
-    id          INTEGER PRIMARY KEY NOT NULL,
-    customer_id TEXT                NOT NULL,
-    visit_at    DATETIME            NOT NULL,
+    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    customer_id TEXT             NOT NULL,
+    visit_at    DATETIME         NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer (id)
 );
 
@@ -48,7 +48,7 @@ CREATE TABLE product
 
 CREATE TABLE ordered_product
 (
-    id         INTEGER PRIMARY KEY NOT NULL,
+    id         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     product_id INTEGER             NOT NULL,
     order_id   TEXT                NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product (id),
