@@ -20,8 +20,9 @@ class Matrix:
     def run(self):
         world = World(
             self.config.global_settings.start_month,
+            self.config.global_settings.start_year,
             self.config.global_settings.end_month,
-            self.config.global_settings.year,
+            self.config.global_settings.end_year,
             self.config.global_settings.date_probability_bonuses,
             self.config.product_repository,
             self.config.global_settings.needs_associations,
@@ -335,10 +336,10 @@ class NotificationBox:
 
 
 class World:
-    def __init__(self, start_month, end_month, year, date_probability_bonuses, product_repository, needs_associations, event_handler):
+    def __init__(self, start_month, start_year, end_month, end_year, date_probability_bonuses, product_repository, needs_associations, event_handler):
         self._event_handler = event_handler
-        self._start_date = datetime.date(year, start_month, 1)
-        self._last_day_date = datetime.date(year, end_month, calendar.monthrange(year, end_month)[1])
+        self._start_date = datetime.date(start_year, start_month, 1)
+        self._last_day_date = datetime.date(end_year, end_month, calendar.monthrange(end_year, end_month)[1])
         self._actual_date = self._start_date
         self._date_probability_bonuses = date_probability_bonuses
         self._product_repository = product_repository
@@ -605,11 +606,12 @@ class Configuration:
 
 
 class GlobalSettings:
-    def __init__(self, start_month, end_month, year, population, date_probability_bonuses, needs_associations):
+    def __init__(self, start_month, start_year, end_month, end_year, population, date_probability_bonuses, needs_associations):
+        self.end_year = end_year
+        self.start_year = start_year
         self.needs_associations = needs_associations
         self.date_probability_bonuses = date_probability_bonuses
         self.population = population
-        self.year = year
         self.end_month = end_month
         self.start_month = start_month
 

@@ -2,7 +2,9 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
   number_of_people: 1000                 # liczba osób w symulacji
   simulation:
     start_month: JANUARY                 # pierwszy miesiąc symulacji
+    start_year: 2020                     # rok początku symulacji
     end_month: JUNE                      # ostatni miesiąc symulacji
+    end_year: 2021                       # rok zakończenia symulacji
     year: 2020                           # rok symulacji
     date_probability_bonus:              # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
       - from: 10.04                      # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
