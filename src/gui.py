@@ -1,6 +1,9 @@
+import threading
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+
+from matrix import SimulationProgressEventHandler
 
 
 def prepare_gui(run_simulation):
@@ -34,7 +37,23 @@ def prepare_gui(run_simulation):
     ttk.Label(mainframe, text="Plik z produktami: ").grid(column=0, row=3, sticky=W)
     ttk.Label(mainframe, textvariable=products_path).grid(column=1, row=3, sticky=W)
 
-    generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation)
+    class GUISimulationProgressHandler(SimulationProgressEventHandler):
+        def on_start(self):
+            progress.set("0 / 0")
+            status.set("Symulacja trwa...")
+            generate_button.configure(state=DISABLED)
+
+        def on_end(self):
+            status.set("Symulacja zakończona")
+            generate_button.configure(state=NORMAL)
+
+        def on_progress_change(self, persons_done, all_people):
+            progress.set(str(persons_done) + " / " + str(all_people))
+
+    def run_simulation_on_as_new_thread():
+        threading.Thread(target=run_simulation, args=(GUISimulationProgressHandler(),)).start()
+
+    generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation_on_as_new_thread)
     generate_button.grid(column=1, row=4, sticky=W)
 
     ttk.Label(mainframe).grid(column=2, row=0)
@@ -44,7 +63,7 @@ def prepare_gui(run_simulation):
     ttk.Label(mainframe, textvariable=status).grid(column=0, row=5, sticky=W)
 
     progress = StringVar()
-    progress.set("0 na 0")
+    progress.set("0 / 0")
     ttk.Label(mainframe, textvariable=progress).grid(column=0, row=6, sticky=W)
 
     for child in mainframe.winfo_children():
@@ -53,6 +72,6 @@ def prepare_gui(run_simulation):
     return window
 
 
-def run_gui(on_run_func):
-    gui = prepare_gui(on_run_func)
+def run_gui(run_simulation):
+    gui = prepare_gui(run_simulation)
     gui.mainloop()

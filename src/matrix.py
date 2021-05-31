@@ -12,10 +12,12 @@ def _date_str(date):
 
 class Matrix:
 
-    def __init__(self, config, event_handler):
+    def __init__(self, config, event_handler, progress_handler):
+        self._progress_handler = progress_handler
         self._event_handler = event_handler
         self.config = config
         self.groups = _create_groups(config.global_settings.population, config.profiles)
+        self._person_counter = 0
 
     def run(self):
         world = World(
@@ -28,6 +30,10 @@ class Matrix:
             self.config.global_settings.needs_associations,
             self._event_handler
         )
+
+        self._progress_handler.on_start()
+        self._progress_handler.on_progress_change(self._person_counter, self.config.global_settings.population)
+
         for group in self.groups:
 
             print("Uruchomiono symulacje dla grupy: " + group.name)
@@ -38,6 +44,11 @@ class Matrix:
 
                 world.start(person)
                 world.reset()
+
+                self._person_counter += 1
+                self._progress_handler.on_progress_change(self._person_counter, self.config.global_settings.population)
+
+        self._progress_handler.on_end()
 
 
 class Group:
@@ -695,3 +706,14 @@ class LooselyCoupledAssociation(BaseAssociation):
         super().__init__(product_category_a, product_category_b)
         self.buy_probability = buy_probability
         self.need_probability = need_probability
+
+
+class SimulationProgressEventHandler:
+    def on_start(self):
+        pass
+
+    def on_end(self):
+        pass
+
+    def on_progress_change(self, persons_done, all_people):
+        pass

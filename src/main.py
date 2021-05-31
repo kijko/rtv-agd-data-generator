@@ -5,7 +5,7 @@ import dbgen
 # todo main-prod/main-dev
 
 
-def generate_big_data():
+def generate_big_data(progress_handler):
     date_bonuses = [DateProbabilityBonus(10, 4, 15, 4, 2021, 10, 2), DateProbabilityBonus(5, 5, 5, 5, 2021, 4, 5)]
 
     needs_associations = [
@@ -19,7 +19,7 @@ def generate_big_data():
         LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
     ]
 
-    global_settings = GlobalSettings(1, 2020, 6, 2021, 10, date_bonuses, needs_associations)
+    global_settings = GlobalSettings(1, 2020, 6, 2021, 10_000, date_bonuses, needs_associations)
 
     poor_guys_needs = [Need("FRIDGE", 1, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2), Need("PHONE", 2, 3, 0.6)]
     poor_guys_profile = Profile("POOR", 18, 1000, 1000, 2000, poor_guys_needs, 0.05)
@@ -34,7 +34,8 @@ def generate_big_data():
 
     example_simulation = Matrix(
         Configuration(global_settings, profiles, in_mem_product_repository),
-        db.get_collector()
+        db.get_collector(),
+        progress_handler
     )
 
     example_simulation.run()
@@ -42,7 +43,7 @@ def generate_big_data():
     db.end()
 
 
-gui.run_gui(lambda: generate_big_data())
+gui.run_gui(generate_big_data)
 
 
 # generate_big_data()
