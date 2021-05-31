@@ -121,17 +121,17 @@ class DbDataCollector(MatrixEventHandler):
     def shopping(self, person, sim_datetime, bought_products, visit_id):
         # print("************* Zdarzenie ************ - ZAKUPKI ! "
         #       + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
-        # todo do not insert if empty
 
-        insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
+        if len(bought_products) > 0:
+            insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
 
-        order_id = str(uuid.uuid4())
-        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, generate_fake_payment_method(), visit_id))
+            order_id = str(uuid.uuid4())
+            self._cursor.execute(insert_order_sql, (order_id, sim_datetime, generate_fake_payment_method(), visit_id))
 
-        insert_product_to_order_sql = """ INSERT INTO ordered_product(product_id, order_id) VALUES(?, ?)"""
+            insert_product_to_order_sql = """ INSERT INTO ordered_product(product_id, order_id) VALUES(?, ?)"""
 
-        for product in bought_products:
-            self._cursor.execute(insert_product_to_order_sql, (product.id, order_id))
+            for product in bought_products:
+                self._cursor.execute(insert_product_to_order_sql, (product.id, order_id))
 
     def person_died(self, person):
         # print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
