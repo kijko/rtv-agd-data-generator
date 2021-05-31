@@ -37,7 +37,7 @@ class Matrix:
 
         for group in self.groups:
 
-            print("Uruchomiono symulacje dla grupy: " + group.name)
+            # print("Uruchomiono symulacje dla grupy: " + group.name)
             while group.has_next_person():
                 person = group.next_person()
 
@@ -106,16 +106,16 @@ class Person:
         return ShoppingCart()
 
     def catch_marketing_offer(self, marketing_offer):
-        print("      Wdrażanie złapanej oferty marketingowej")
+        # print("      Wdrażanie złapanej oferty marketingowej")
 
         needs_from_category = self._needs_from_category(marketing_offer.product_category)
 
         if len(needs_from_category) > 0:
-            print("        Osoba ma już potrzebę kupna produktu z kategorii: " + marketing_offer.product_category)
+            # print("        Osoba ma już potrzebę kupna produktu z kategorii: " + marketing_offer.product_category)
             corresponding_need = needs_from_category[0]
 
             if random.random() <= 0.5:
-                print("        Prawdopodobieństwo kupna przedmiotu zostało zwiększone o 50% !")
+                # print("        Prawdopodobieństwo kupna przedmiotu zostało zwiększone o 50% !")
 
                 half_of_prob = corresponding_need.buy_probability / 2
                 new_probability = corresponding_need.buy_probability + half_of_prob
@@ -125,11 +125,11 @@ class Person:
                 else:
                     corresponding_need.buy_probability = new_probability
             else:
-                print("        Liczba przedmiotów z kategorii " + marketing_offer.product_category + " które osoba chciałaby kupić została zwiększona o 1 !")
+                # print("        Liczba przedmiotów z kategorii " + marketing_offer.product_category + " które osoba chciałaby kupić została zwiększona o 1 !")
                 corresponding_need.num_of_items += 1
 
         else:
-            print("        Osoba nie myślała wcześniej o kupnie przedmiotu z kategorii " + marketing_offer.product_category + ". Dodawanie nowej potrzeby")
+            # print("        Osoba nie myślała wcześniej o kupnie przedmiotu z kategorii " + marketing_offer.product_category + ". Dodawanie nowej potrzeby")
             self.needs.append(
                 Need(marketing_offer.product_category, 1, random.randint(-100, 100), marketing_offer.buy_probability)
             )
@@ -150,7 +150,7 @@ class Person:
 
         buy_probability = need_of_product.buy_probability
         if probability_multiplier is not None:
-            print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
+            # print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
 
             calculated_buy_prob = buy_probability * probability_multiplier
             if calculated_buy_prob >= 1.0:
@@ -158,7 +158,7 @@ class Person:
             else:
                 buy_probability = calculated_buy_prob
 
-        print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
+        # print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
 
         return random.random() <= buy_probability
 
@@ -168,21 +168,23 @@ class Person:
         relation_between_them = association.relation
 
         if relation_between_them == one_to_one:
-            print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do jednego")
+            # print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do jednego")
             num_of_a_we_have = self._count_belongings_include_shopping_cart_by_category(a, shopping_cart)
             num_of_b_we_have = self._count_belongings_include_shopping_cart_by_category(b, shopping_cart)
 
-            print("            Osoba posiada " + str(num_of_a_we_have) + " produktów z kategorii " + a + " oraz " + str(num_of_b_we_have) + " produktów z kategorii " + b)
+            # print("            Osoba posiada " + str(num_of_a_we_have) + " produktów z kategorii " + a + " oraz " + str(num_of_b_we_have) + " produktów z kategorii " + b)
 
             have = num_of_b_we_have < num_of_a_we_have
             if have:
-                print("            Osoba uznaje że potrzebuje produkt z kategorii " + b)
+                pass
+                # print("            Osoba uznaje że potrzebuje produkt z kategorii " + b)
             else:
-                print("            Osoba uznaje, że nie potrzebuje produktu z kategorii " + b + " ponieważ już go posiada (w domu lub w koszyku)")
+                pass
+                # print("            Osoba uznaje, że nie potrzebuje produktu z kategorii " + b + " ponieważ już go posiada (w domu lub w koszyku)")
 
             return have
         else:
-            print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do wielu")
+            # print("            Relacja pomiędzy " + a + " i " + b + ": Jeden do wielu")
             num_of_b_we_have = self._count_belongings_include_shopping_cart_by_category(b, shopping_cart)
 
             return num_of_b_we_have == 0
@@ -196,7 +198,7 @@ class Person:
     def does_he_want_associated_product(self, association, probability_multiplier):
         buy_probability = association.buy_probability
         if probability_multiplier is not None:
-            print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
+            # print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
 
             calculated_buy_prob = buy_probability * probability_multiplier
             if calculated_buy_prob >= 1.0:
@@ -204,7 +206,7 @@ class Person:
             else:
                 buy_probability = calculated_buy_prob
 
-        print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
+        # print("        Prawdopodobieństwo kupna przedmiotu wynosi: " + str(buy_probability))
 
         return random.random() <= buy_probability
 
@@ -344,7 +346,7 @@ class NotificationBox:
         else:
             self._date_to_notifications[key] = [offer]
 
-        print("    Oferta marketingowa przygotowana do wysłania ", self._date_to_notifications)
+        # print("    Oferta marketingowa przygotowana do wysłania ", self._date_to_notifications)
 
 
 class World:
@@ -360,31 +362,32 @@ class World:
 
     def start(self, person):
         if self._actual_date == self._last_day_date:
-            print("Świat się zakończył. Zresetuj go")
+            pass
+            # print("Świat się zakończył. Zresetuj go")
         else:
             needStr = ""
             for need in person.needs:
                 needStr += "[" + need.category + ", " + str(need.num_of_items) + ", " + str(need.priority) + ", " + str(need.buy_probability) + "] "
 
-            print("Osoba z id: " + person.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
+            # print("Osoba z id: " + person.id + " i potrzebami: " + needStr + "została umieszona w symulacji.")
 
             while self._actual_date <= self._last_day_date:
                 actual_date_str = _date_str(self._actual_date)
-                print("  Dzień " + actual_date_str + " zaczął się.")
+                # print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
                     person.pay_the_paycheck()
-                    print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
+                    # print("    [Wypłata ! Aktualna kwota jaką posiada osoba: " + str(person.account_balance) + "]")
 
                 self._process_notifications(person)
 
-                print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
+                # print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
                 if self._will_go_to_shop(person):
                     visit_id = str(uuid.uuid4())
                     self._event_handler.went_to_shop(person, self._actual_date, visit_id)
 
-                    print("    Osoba poszła do sklepu !")
-                    print("    Stan osoby: " + repr(person))
+                    # print("    Osoba poszła do sklepu !")
+                    # print("    Stan osoby: " + repr(person))
                     shopping_list = person.prepare_shopping_list()
                     buy_probability_bonus_multiplier = self._get_bonus_buy_probability_multiplier()
 
@@ -392,7 +395,7 @@ class World:
 
                     while not shopping_list.empty():
                         product_category = shopping_list.get()
-                        print("      Osoba szuka produktu z kategorii: " + product_category)
+                        # print("      Osoba szuka produktu z kategorii: " + product_category)
 
                         remaining_budget = person.calculate_remaining_budget(shopping_cart)
                         products_that_person_can_afford_atm = \
@@ -402,32 +405,34 @@ class World:
                             product_to_buy = None
 
                             if num_of_that_products == 1:
-                                print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
+                                # print("      Jest jeden produkt na który osoba może sobie pozwolić w tym momencie.")
                                 product_to_buy = products_that_person_can_afford_atm[0]
-                                print("        " + repr(product_to_buy))
+                                # print("        " + repr(product_to_buy))
                             else:
-                                print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
+                                # print("      Jest wiele produktów na które osoba może sobie pozwolić " + "[" + str(num_of_that_products) + "]")
                                 product_to_buy = \
                                     products_that_person_can_afford_atm[random.randint(0, num_of_that_products - 1)]
-                                print("        Osoba bieże pod uwage tylko ten jeden: " + repr(product_to_buy))
+                                # print("        Osoba bieże pod uwage tylko ten jeden: " + repr(product_to_buy))
 
                             if person.does_he_want_it(product_to_buy, buy_probability_bonus_multiplier):
                                 shopping_cart.place_needed_product(product_to_buy)
-                                print("        Osoba umieściła produkt w koszyku!")
+                                # print("        Osoba umieściła produkt w koszyku!")
 
                                 self._consider_associated_products_purchase(
                                     StrongAssociation,
                                     ConsideringContext([product_to_buy], person, shopping_cart, buy_probability_bonus_multiplier)
                                 )
                             else:
-                                print("        Osoba zrezygnowała z kupna przedmiotu...")
+                                pass
+                                # print("        Osoba zrezygnowała z kupna przedmiotu...")
 
                         else:
-                            print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
+                            pass
+                            # print("      Brak produktów na które osoba może sobie pozwolić w tym momencie.")
 
-                    print("    Osoba idzie do kasy...")
+                    # print("    Osoba idzie do kasy...")
 
-                    print("    Kasjer proponuje co mu kazali")
+                    # print("    Kasjer proponuje co mu kazali")
                     self._consider_associated_products_purchase(
                         Association,
                         ConsideringContext(shopping_cart.products, person, shopping_cart, buy_probability_bonus_multiplier)
@@ -437,49 +442,53 @@ class World:
 
                     self._event_handler.shopping(person, self._actual_date, shopping_cart.products.copy(), visit_id)
 
-                    print("    Osoba zakończyła zakupy")
+                    # print("    Osoba zakończyła zakupy")
 
-                    print("    Przetwarzanie zakupionych produktów w celu wysyłki powiązanych propozycji/promocji kanałami marketingowymi")
+                    # print("    Przetwarzanie zakupionych produktów w celu wysyłki powiązanych propozycji/promocji kanałami marketingowymi")
                     self._process_bought_products(shopping_cart)
 
-                    print("    Stan osoby: " + repr(person))
+                    # print("    Stan osoby: " + repr(person))
                 else:
-                    print("    Osoba nie poszła do sklepu...")
+                    pass
+                    # print("    Osoba nie poszła do sklepu...")
 
                 self._actual_date += _day
-            print("Koniec świata dla osoby o id: " + person.id)
+            # print("Koniec świata dla osoby o id: " + person.id)
             self._event_handler.person_died(person)
 
     def _process_notifications(self, person):
-        print("    Przetwarzanie otrzymanych ofert")
+        # print("    Przetwarzanie otrzymanych ofert")
 
         notifications = self._notification_box.get_for_date(self._actual_date)
 
         if notifications is None:
-            print("    Brak ofert")
+            pass
+            # print("    Brak ofert")
+
         else:
-            print("    Otrzymano " + str(len(notifications)) + " ofert marketingowych")
+            # print("    Otrzymano " + str(len(notifications)) + " ofert marketingowych")
 
             for notification in notifications:
-                print("      Przetwarzanie oferty: " + repr(notification))
+                # print("      Przetwarzanie oferty: " + repr(notification))
                 if random.random() <= notification.catch_probability:
-                    print("    Osoba złapała przynęte !")
+                    # print("    Osoba złapała przynęte !")
                     person.catch_marketing_offer(notification)
                 else:
-                    print("    Osoba nie jest zainteresowana ofertą")
+                    pass
+                    # print("    Osoba nie jest zainteresowana ofertą")
 
     def _process_bought_products(self, shopping_cart):
         for product in shopping_cart.products:
-            print("      Wyszukiwanie powiązań " + str(LooselyCoupledAssociation) + " dla produktu: " + repr(product))
+            # print("      Wyszukiwanie powiązań " + str(LooselyCoupledAssociation) + " dla produktu: " + repr(product))
             loosely_coupled_associations = \
                 self._find_associations_by_product_category_and_association_type(product.category, LooselyCoupledAssociation)
             num_of_asses = len(loosely_coupled_associations)
 
             if num_of_asses > 0:
-                print("        Znaleziono " + str(num_of_asses) + " powiązań. Przygotowywanie oferty marketingowej")
+                # print("        Znaleziono " + str(num_of_asses) + " powiązań. Przygotowywanie oferty marketingowej")
 
                 for ass in loosely_coupled_associations:
-                    print("    Przetwarzanie powiązania " + str(LooselyCoupledAssociation))
+                    # print("    Przetwarzanie powiązania " + str(LooselyCoupledAssociation))
                     one_to_seven_days = _day * random.randint(1, 7)
 
                     date_when_person_receive_offer = \
@@ -493,74 +502,79 @@ class World:
 
                     self._notification_box.show_on_time(date_when_person_receive_offer, offer)
 
-                    print("        Wysłano ofertę marketingową: " + repr(offer))
+                    # print("        Wysłano ofertę marketingową: " + repr(offer))
 
                     date_when_person_receive_offer_str = _date_str(date_when_person_receive_offer)
-                    print("        Zostanie ona odebrana przez osobę dnia: " + date_when_person_receive_offer_str)
+                    # print("        Zostanie ona odebrana przez osobę dnia: " + date_when_person_receive_offer_str)
 
             else:
-                print("        Brak powiązań.")
+                pass
+                # print("        Brak powiązań.")
 
     # association_type -> only types that inherit from ShoppingStageAssociation
     def _consider_associated_products_purchase(self, association_type, considering_context):
-        print("          Analiza powiązanych kategorii dla produktów: " + ", ".join(map(lambda prd: repr(prd), considering_context.products)))
-        print("          Typ powiązania: " + str(association_type))
+        # print("          Analiza powiązanych kategorii dla produktów: " + ", ".join(map(lambda prd: repr(prd), considering_context.products)))
+        # print("          Typ powiązania: " + str(association_type))
 
         for product in considering_context.products:
-            print("          Analiza powiązań dla produktu: " + repr(product))
+            # print("          Analiza powiązań dla produktu: " + repr(product))
             associations = \
                 self._find_associations_by_product_category_and_association_type(product.category, association_type)
             num_of_associations = len(associations)
 
             if num_of_associations > 0:
                 associated_categories_str = ", ".join(map(lambda associ: associ.product_category_b, associations))
-                print("          Znaleziono powiązania z kategoriami: " + associated_categories_str)
+                # print("          Znaleziono powiązania z kategoriami: " + associated_categories_str)
 
                 for ass in associations:
                     associated_category = ass.product_category_b
 
-                    print("          Analiza powiązania z kategorią: " + associated_category)
+                    # print("          Analiza powiązania z kategorią: " + associated_category)
 
                     person = considering_context.person
                     shopping_cart = considering_context.shopping_cart
                     remaining_budget = person.calculate_remaining_budget(shopping_cart)
 
                     if person.does_he_need_associated_product(ass, shopping_cart):
-                        print("          Osoba potrzebuje produktu z powiązanej kategorii " + associated_category)
-                        print("          Aktualny budżet wynosi: " + str(remaining_budget))
+                        # print("          Osoba potrzebuje produktu z powiązanej kategorii " + associated_category)
+                        # print("          Aktualny budżet wynosi: " + str(remaining_budget))
 
                         associated_category_products_that_person_can_afford_atm = \
                             self._product_repository.find_by_category_and_max_price(associated_category, remaining_budget)
                         num_of_that_products = len(associated_category_products_that_person_can_afford_atm)
 
                         if num_of_that_products > 0:
-                            print("          Znaleziono " + str(num_of_that_products) + " produktów z powiązanej kategorii")
+                            # print("          Znaleziono " + str(num_of_that_products) + " produktów z powiązanej kategorii")
                             product_index = random.randint(0, num_of_that_products - 1)
                             product_to_buy = associated_category_products_that_person_can_afford_atm[product_index]
 
-                            print("          Wybrano produkt: " + repr(product_to_buy))
+                            # print("          Wybrano produkt: " + repr(product_to_buy))
 
                             buy_prob_bonus_multiplier = considering_context.buy_probability_bonus_multiplier
                             if person.does_he_want_associated_product(ass, buy_prob_bonus_multiplier):
-                                print("          Kupuje to !")
+                                # print("          Kupuje to !")
                                 shopping_cart.place_not_needed_product(product_to_buy)
 
-                                print("          Wyszukiwanie dalszych powiązań dla kategorii: " + product_to_buy.category)
+                                # print("          Wyszukiwanie dalszych powiązań dla kategorii: " + product_to_buy.category)
                                 self._consider_associated_products_purchase(
                                     association_type,
                                     considering_context.recreate_with_other_products([product_to_buy])
                                 )
                             else:
-                                print("          Osoba zdecydowała się jednak go nie kupować...")
+                                pass
+                                # print("          Osoba zdecydowała się jednak go nie kupować...")
 
                         else:
-                            print("          Nie znaleziono produktów z kategorii " + associated_category)
+                            pass
+                            # print("          Nie znaleziono produktów z kategorii " + associated_category)
 
                     else:
-                        print("          Osoba niepotrzebuje produktu z powiązanej kategorii " + associated_category)
+                        pass
+                        # print("          Osoba niepotrzebuje produktu z powiązanej kategorii " + associated_category)
 
             else:
-                print("          Brak powiązań typu: " + str(association_type) + " dla kategorii " + product.category)
+                pass
+                # print("          Brak powiązań typu: " + str(association_type) + " dla kategorii " + product.category)
 
     def _find_associations_by_product_category_and_association_type(self, category, association_type):
         list_copy = self._needs_associations.copy()
@@ -574,7 +588,7 @@ class World:
         )
 
     def reset(self):
-        print("Reset świata")
+        # print("Reset świata")
         self._actual_date = self._start_date
         self._notification_box.flush()
 
@@ -585,12 +599,12 @@ class World:
             return random.random() <= person.go_to_shop_probability
         else:
             gts_multiplier = bonus.go_to_shop_probability_multiplier
-            print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
+            # print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
             bonus_probability = person.go_to_shop_probability * gts_multiplier
-            print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
+            # print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
 
             if bonus_probability >= 1.0:
-                print("    Napewno pójdzie do sklepu")
+                # print("    Napewno pójdzie do sklepu")
                 return True
             else:
                 return random.random() <= bonus_probability

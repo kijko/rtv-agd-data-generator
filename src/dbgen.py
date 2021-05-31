@@ -88,7 +88,7 @@ class DbDataCollector(MatrixEventHandler):
         self._cursor = cursor
 
     def person_was_born(self, person):
-        print("************* Zdarzenie ************ - Utworzono nową osobę - " + repr(person))
+        # print("************* Zdarzenie ************ - Utworzono nową osobę - " + repr(person))
 
         insert_customer_sql = """INSERT INTO customer(id, first_name, last_name, email, password_hash, phone_number, created_at, group_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"""
 
@@ -111,16 +111,17 @@ class DbDataCollector(MatrixEventHandler):
 
 
     def went_to_shop(self, person, sim_datetime, visit_id):
-        print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
-              + sim_datetime.strftime("%d-%m-%y") + " " + repr(person))
+        # print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
+        #       + sim_datetime.strftime("%d-%m-%y") + " " + repr(person))
 
         insert_visit_sql = """ INSERT INTO visit(id, customer_id, visit_at) VALUES(?, ?, ?)"""
 
         self._cursor.execute(insert_visit_sql, (visit_id, person.id, sim_datetime))
 
     def shopping(self, person, sim_datetime, bought_products, visit_id):
-        print("************* Zdarzenie ************ - ZAKUPKI ! "
-              + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
+        # print("************* Zdarzenie ************ - ZAKUPKI ! "
+        #       + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
+        # todo do not insert if empty
 
         insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
 
@@ -133,5 +134,5 @@ class DbDataCollector(MatrixEventHandler):
             self._cursor.execute(insert_product_to_order_sql, (product.id, order_id))
 
     def person_died(self, person):
-        print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
+        # print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
         self._connection.commit()
