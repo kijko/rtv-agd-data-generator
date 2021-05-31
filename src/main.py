@@ -19,7 +19,7 @@ def generate_big_data(progress_handler):
         LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
     ]
 
-    global_settings = GlobalSettings(1, 2020, 6, 2021, 10_000, date_bonuses, needs_associations)
+    global_settings = GlobalSettings(1, 2020, 6, 2021, 10_040, date_bonuses, needs_associations)
 
     poor_guys_needs = [Need("FRIDGE", 1, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2), Need("PHONE", 2, 3, 0.6)]
     poor_guys_profile = Profile("POOR", 18, 1000, 1000, 2000, poor_guys_needs, 0.05)

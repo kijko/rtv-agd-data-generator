@@ -54,6 +54,7 @@ class Database:
         return DbDataCollector(self._connection, self._cursor)
 
     def end(self):
+        self._connection.commit()
         self._cursor.close()
         self._connection.close()
 
@@ -86,8 +87,10 @@ class DbDataCollector(MatrixEventHandler):
     def __init__(self, connection, cursor):
         self._connection = connection
         self._cursor = cursor
+        self._count_person = 0
 
     def person_was_born(self, person):
+        self._count_person += 1
         # print("************* Zdarzenie ************ - Utworzono nową osobę - " + repr(person))
 
         insert_customer_sql = """INSERT INTO customer(id, first_name, last_name, email, password_hash, phone_number, created_at, group_name) VALUES(?, ?, ?, ?, ?, ?, ?, ?)"""
@@ -134,5 +137,7 @@ class DbDataCollector(MatrixEventHandler):
                 self._cursor.execute(insert_product_to_order_sql, (product.id, order_id))
 
     def person_died(self, person):
+        if self._count_person % 1_000 == 0:
+            self._connection.commit()
         # print("************* Zdarzenie ************ - Koniec życia pełnego konsumpcji i pracy ! RIP " + repr(person))
-        self._connection.commit()
+        # self._connection.commit()
