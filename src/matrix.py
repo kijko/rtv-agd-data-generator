@@ -33,7 +33,13 @@ class Matrix:
         )
 
         self._progress_handler.on_start()
-        self._progress_handler.on_progress_change(self._person_counter, self.config.global_settings.population)
+
+        actually_population = 0
+
+        for group in self.groups:
+            actually_population += group.max_population
+
+        self._progress_handler.on_progress_change(self._person_counter, actually_population)
 
         for group in self.groups:
 
@@ -47,7 +53,7 @@ class Matrix:
                 world.reset()
 
                 self._person_counter += 1
-                self._progress_handler.on_progress_change(self._person_counter, self.config.global_settings.population)
+                self._progress_handler.on_progress_change(self._person_counter, actually_population)
 
         self._progress_handler.on_end()
 
@@ -57,14 +63,14 @@ class Group:
         self.initial_account_balance = initial_account_balance
         self._salary_to = salary_to
         self._salary_from = salary_from
-        self._max_population = population
+        self.max_population = population
         self._actual_population = 0
         self.needs = needs
         self.name = name
         self.go_to_shop_probability = go_to_shop_probability
 
     def has_next_person(self):
-        return self._actual_population < self._max_population
+        return self._actual_population < self.max_population
 
     def next_person(self):
         if self.has_next_person():

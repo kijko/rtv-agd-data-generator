@@ -22,7 +22,7 @@ def generate_big_data(progress_handler):
     global_settings = GlobalSettings(1, 2020, 6, 2021, 10_040, date_bonuses, needs_associations)
 
     poor_guys_needs = [Need("FRIDGE", 1, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2), Need("PHONE", 2, 3, 0.6)]
-    poor_guys_profile = Profile("POOR", 18, 1000, 1000, 2000, poor_guys_needs, 0.05)
+    poor_guys_profile = Profile("POOR", 18, 1000, 1000, 2000, poor_guys_needs, 0.1)
 
     middle_class_profile = Profile("MIDDLE_CLASS", 61, 2000, 3000, 5000, [Need("GAME_CONSOLE", 2, 1, 0.4)], 0.04)
     rich_man_profile = Profile("RICH_MEN", 21, 3000, 10000, 15000, [Need("GAME_CONSOLE", 1, 1, 0.4)], 0.03)
