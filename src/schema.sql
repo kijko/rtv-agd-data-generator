@@ -9,7 +9,6 @@ CREATE TABLE customer
     created_at    DATETIME            NOT NULL,
     group_name    TEXT                NOT NULL
 );
-CREATE INDEX customer_email ON customer (email);
 
 CREATE TABLE address
 (
@@ -23,7 +22,7 @@ CREATE TABLE address
 
 CREATE TABLE visit
 (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    id          TEXT PRIMARY KEY NOT NULL,
     customer_id TEXT             NOT NULL,
     visit_at    DATETIME         NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customer (id)
@@ -34,7 +33,7 @@ CREATE TABLE customer_order
     id           TEXT PRIMARY KEY NOT NULL,
     created_at   DATETIME         NOT NULL,
     payment_type TEXT             NOT NULL,
-    visit_id     INTEGER          NOT NULL,
+    visit_id     TEXT          NOT NULL,
     FOREIGN KEY (visit_id) REFERENCES visit (id)
 );
 

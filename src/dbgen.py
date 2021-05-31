@@ -110,28 +110,22 @@ class DbDataCollector(MatrixEventHandler):
                                                   fake.building_number()))
 
 
-    def went_to_shop(self, person, sim_datetime):
+    def went_to_shop(self, person, sim_datetime, visit_id):
         print("************* Zdarzenie ************ - Osoba poszła do sklepu ! "
               + sim_datetime.strftime("%d-%m-%y") + " " + repr(person))
 
-        insert_visit_sql = """ INSERT INTO visit(customer_id, visit_at) VALUES(?, ?)"""
+        insert_visit_sql = """ INSERT INTO visit(id, customer_id, visit_at) VALUES(?, ?, ?)"""
 
-        self._cursor.execute(insert_visit_sql, (person.id, sim_datetime))
+        self._cursor.execute(insert_visit_sql, (visit_id, person.id, sim_datetime))
 
-    def shopping(self, person, sim_datetime, bought_products):
+    def shopping(self, person, sim_datetime, bought_products, visit_id):
         print("************* Zdarzenie ************ - ZAKUPKI ! "
               + sim_datetime.strftime("%d-%m-%y") + " " + person.id + " Paragon: " + str(bought_products))
-
-        select_last_visit_sql = """ SELECT id, MAX(visit_at) FROM visit WHERE customer_id = ?"""
-
-        self._cursor.execute(select_last_visit_sql, (person.id,))
-
-        visit = self._cursor.fetchall()[0]
 
         insert_order_sql = """ INSERT INTO customer_order(id, created_at, payment_type, visit_id) VALUES(?, ?, ?, ?)"""
 
         order_id = str(uuid.uuid4())
-        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, generate_fake_payment_method(), visit[0]))
+        self._cursor.execute(insert_order_sql, (order_id, sim_datetime, generate_fake_payment_method(), visit_id))
 
         insert_product_to_order_sql = """ INSERT INTO ordered_product(product_id, order_id) VALUES(?, ?)"""
 

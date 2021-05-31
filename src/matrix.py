@@ -2,6 +2,7 @@ import datetime
 import calendar
 import random
 import queue
+import uuid
 
 _day = datetime.timedelta(days=1)
 
@@ -379,7 +380,8 @@ class World:
 
                 print("    Prawdopodobieństwo pójścia do sklepu wynosi: " + str(person.go_to_shop_probability))
                 if self._will_go_to_shop(person):
-                    self._event_handler.went_to_shop(person, self._actual_date)
+                    visit_id = str(uuid.uuid4())
+                    self._event_handler.went_to_shop(person, self._actual_date, visit_id)
 
                     print("    Osoba poszła do sklepu !")
                     print("    Stan osoby: " + repr(person))
@@ -433,7 +435,7 @@ class World:
 
                     person.buy_things(shopping_cart)
 
-                    self._event_handler.shopping(person, self._actual_date, shopping_cart.products.copy())
+                    self._event_handler.shopping(person, self._actual_date, shopping_cart.products.copy(), visit_id)
 
                     print("    Osoba zakończyła zakupy")
 
@@ -664,10 +666,10 @@ class MatrixEventHandler:
     def person_was_born(self, person):
         pass
 
-    def went_to_shop(self, person, sim_datetime):
+    def went_to_shop(self, person, sim_datetime, visit_id):
         pass
 
-    def shopping(self, person, sim_datetime, bought_products):
+    def shopping(self, person, sim_datetime, bought_products, visit_id):
         pass
 
     def person_died(self, person):
