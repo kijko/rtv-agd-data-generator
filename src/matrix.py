@@ -379,7 +379,7 @@ class World:
 
             while self._actual_date <= self._last_day_date:
                 actual_date_str = _date_str(self._actual_date)
-                # print("  Dzień " + actual_date_str + " zaczął się.")
+                print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
                     person.pay_the_paycheck()
@@ -605,7 +605,7 @@ class World:
             return random.random() <= person.go_to_shop_probability
         else:
             gts_multiplier = bonus.go_to_shop_probability_multiplier
-            # print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
+            print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
             bonus_probability = person.go_to_shop_probability * gts_multiplier
             # print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
 
@@ -657,7 +657,7 @@ def mock_profiles():
 
 
 def mock_global_settings():
-    date_bonuses = [DateProbabilityBonus(10, 4, 15, 4, 2021, 10, 2), DateProbabilityBonus(5, 5, 5, 5, 2021, 4, 5)]
+    date_bonuses = [DateProbabilityBonus(10, 4, 2020, 15, 4, 2020, 10, 2), DateProbabilityBonus(5, 5, 2020, 5, 5, 2021, 4, 5)]
 
     needs_associations = [
         StrongAssociation("WIRELESS-GAMEPAD", "AAA-BATTERIES", one_to_one, 0.8),
@@ -670,7 +670,7 @@ def mock_global_settings():
         LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
     ]
 
-    global_settings = GlobalSettings(1, 2020, 6, 2021, 10_040, date_bonuses, needs_associations)
+    global_settings = GlobalSettings(1, 2020, 6, 2021, 10, date_bonuses, needs_associations)
 
     return global_settings
 
@@ -700,11 +700,12 @@ class Profile:
 
 
 class DateProbabilityBonus:
-    def __init__(self, day_from, month_from, day_to, month_to, year, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
+    def __init__(self, day_from, month_from, year_from, day_to, month_to, year_to, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
+        self.year_from = year_from
         self.buy_item_probability_multiplier = buy_item_probability_multiplier
         self.go_to_shop_probability_multiplier = go_to_shop_probability_multiplier
-        self._first_day = datetime.date(year, month_from, day_from)
-        self._last_day = datetime.date(year, month_to, day_to)
+        self._first_day = datetime.date(year_from, month_from, day_from)
+        self._last_day = datetime.date(year_to, month_to, day_to)
 
     def date_has_bonus(self, date):
         return self._first_day <= date <= self._last_day
