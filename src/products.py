@@ -8,14 +8,15 @@ class CSVInMemoryProductRepository:
 
         with open(csv_file_path, 'r') as csv_file:
             id = 1
-            reader = csv.reader(csv_file)
+            reader = csv.reader(csv_file, delimiter=";")
 
             # omijamy nagłówek
             next(reader, None)
 
             for row in reader:
-                print(row)
-                self._products.append(Product(id, row[0], float(row[1]), row[2]))
+                if len(row[0]) > 0 and len(row[1]) > 0 and len(row[2]) > 0:
+                    self._products.append(Product(id, row[0], float(row[1]), row[2]))
+                    id += 1
 
             print("   Wczytano " + str(len(self._products)) + " produktów: ")
             for product in self._products:
