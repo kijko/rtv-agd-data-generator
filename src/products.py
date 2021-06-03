@@ -15,7 +15,7 @@ class CSVInMemoryProductRepository:
 
             for row in reader:
                 if len(row[0]) > 0 and len(row[1]) > 0 and len(row[2]) > 0:
-                    self._products.append(Product(id, row[0], float(row[1]), row[2]))
+                    self._products.append(Product(id, row[0], float(row[1].replace(",", ".")), row[2]))
                     id += 1
 
             print("   Wczytano " + str(len(self._products)) + " produktów: ")
