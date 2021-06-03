@@ -6,7 +6,7 @@ class CSVInMemoryProductRepository:
         print("Creating product repo from file: " + csv_file_path)
         self._products = []
 
-        with open(csv_file_path, 'r') as csv_file:
+        with open(csv_file_path, "r", encoding='utf-8') as csv_file:
             id = 1
             reader = csv.reader(csv_file, delimiter=";")
 
