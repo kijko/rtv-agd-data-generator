@@ -155,3 +155,6 @@ Thumbs.db
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 dev-data/*.db
+dev-data/*.csv
+dev-data/*.yml
+dev-data/*.yaml

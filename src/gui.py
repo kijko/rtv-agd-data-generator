@@ -15,11 +15,19 @@ def prepare_gui(run_simulation):
     window.columnconfigure(0, weight=1)
     window.rowconfigure(0, weight=1)
 
+    input = SimulatorInput(None, None)
+
     def on_config_load_button():
-        config_path.set(filedialog.askopenfilename())
+        config_file_path = filedialog.askopenfilename()
+        config_path.set(config_file_path)
+
+        input.yml_input_file_path = config_file_path
 
     def on_products_load_button():
-        products_path.set(filedialog.askopenfilename())
+        products_file_path = filedialog.askopenfilename()
+        products_path.set(products_file_path)
+
+        input.csv_input_file_path = products_file_path
 
     ttk.Button(mainframe, text="Wczytaj plik konfiguracyjny", command=on_config_load_button) \
         .grid(column=1, row=0, sticky=W)
@@ -51,7 +59,7 @@ def prepare_gui(run_simulation):
             progress.set(str(persons_done) + " / " + str(all_people))
 
     def run_simulation_on_as_new_thread():
-        threading.Thread(target=run_simulation, args=(GUISimulationProgressHandler(),)).start()
+        threading.Thread(target=run_simulation, args=(GUISimulationProgressHandler(), input)).start()
 
     generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation_on_as_new_thread)
     generate_button.grid(column=1, row=4, sticky=W)
@@ -75,3 +83,9 @@ def prepare_gui(run_simulation):
 def run_gui(run_simulation):
     gui = prepare_gui(run_simulation)
     gui.mainloop()
+
+
+class SimulatorInput:
+    def __init__(self, product_file_path, config_file_path):
+        self.yml_input_file_path = config_file_path
+        self.csv_input_file_path = product_file_path

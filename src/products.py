@@ -1,6 +1,7 @@
 
 class CSVInMemoryProductRepository:
     def __init__(self, csv_file_path):
+        print("Creating product repo from file: " + csv_file_path)
         self._products = [
             Product(1, "FRIDGE-1", 4999.99, "FRIDGE"),
             Product(2, "FRIDGE-2", 2499.89, "FRIDGE"),

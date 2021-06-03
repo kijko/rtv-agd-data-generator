@@ -638,6 +638,45 @@ class Configuration:
         self.product_repository = product_repository
 
 
+class YMLConfiguration(Configuration):
+    def __init__(self, yml_file_path, product_repository):
+        super().__init__(mock_global_settings(), mock_profiles(), product_repository)
+        print("Creating configuration from file: " + yml_file_path)
+
+
+def mock_profiles():
+    poor_guys_needs = [Need("FRIDGE", 0, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2), Need("PHONE", 2, 3, 0.6)]
+    poor_guys_profile = Profile("POOR", 17, 1000, 1000, 2000, poor_guys_needs, 0.1)
+
+    middle_class_profile = Profile("MIDDLE_CLASS", 60, 2000, 3000, 5000, [Need("GAME_CONSOLE", 2, 1, 0.4)], 0.04)
+    rich_man_profile = Profile("RICH_MEN", 20, 3000, 10000, 15000, [Need("GAME_CONSOLE", 1, 1, 0.4)], 0.03)
+
+    profiles = [poor_guys_profile, middle_class_profile, rich_man_profile]
+
+    return profiles
+
+
+def mock_global_settings():
+    date_bonuses = [DateProbabilityBonus(10, 4, 15, 4, 2021, 10, 2), DateProbabilityBonus(5, 5, 5, 5, 2021, 4, 5)]
+
+    needs_associations = [
+        StrongAssociation("WIRELESS-GAMEPAD", "AAA-BATTERIES", one_to_one, 0.8),
+        StrongAssociation("COFFEE-MACHINE", "COFFEE", one_to_many, 0.5),
+        StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.4),
+        StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 0.3),
+        Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.9),
+        LooselyCoupledAssociation("FRIDGE", "WASHING_MACHINE", 0.8, 0.6),
+        LooselyCoupledAssociation("TV", "FRIDGE", 0.8, 0.6),
+        LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
+    ]
+
+    global_settings = GlobalSettings(1, 2020, 6, 2021, 10_040, date_bonuses, needs_associations)
+
+    return global_settings
+
+
+
+
 class GlobalSettings:
     def __init__(self, start_month, start_year, end_month, end_year, population, date_probability_bonuses, needs_associations):
         self.end_year = end_year
