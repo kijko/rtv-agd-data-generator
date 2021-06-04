@@ -3,6 +3,7 @@ import calendar
 import random
 import queue
 import uuid
+import yaml
 
 _day = datetime.timedelta(days=1)
 
@@ -379,7 +380,7 @@ class World:
 
             while self._actual_date <= self._last_day_date:
                 actual_date_str = _date_str(self._actual_date)
-                print("  Dzień " + actual_date_str + " zaczął się.")
+                # print("  Dzień " + actual_date_str + " zaczął się.")
 
                 if self._actual_date.day == 1:
                     person.pay_the_paycheck()
@@ -605,7 +606,7 @@ class World:
             return random.random() <= person.go_to_shop_probability
         else:
             gts_multiplier = bonus.go_to_shop_probability_multiplier
-            print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
+            # print("    [bonus prawdopodobienstwa x" + str(gts_multiplier) + " !]")
             bonus_probability = person.go_to_shop_probability * gts_multiplier
             # print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
 
@@ -633,15 +634,146 @@ class World:
 
 class Configuration:
     def __init__(self, global_settings, profiles, product_repository):
+        if global_settings is None or len(profiles) == 0 or profiles is None or product_repository is None:
+            raise ValueError("Configuration receives incorrect objects")
+
         self.global_settings = global_settings
         self.profiles = profiles
         self.product_repository = product_repository
 
+    def __repr__(self):
+        return "GlobalSettings: " + repr(self.global_settings) + "\n" + "Profiles: " + repr(self.profiles) + "\n" + "Product Repo: " + repr(self.product_repository)
+
+
+_month_name_to_number_dict = {
+    "JANUARY": 1,
+    "FEBRUARY": 2,
+    "MARCH": 3,
+    "APRIL": 4,
+    "MAY": 5,
+    "JUNE": 6,
+    "JULY": 7,
+    "AUGUST": 8,
+    "SEPTEMBER": 9,
+    "OCTOBER": 10,
+    "NOVEMBER": 11,
+    "DECEMBER": 12
+}
+
+
+def _determine_num_of_month(month_name):
+    return _month_name_to_number_dict[month_name]
+
 
 class YMLConfiguration(Configuration):
+
     def __init__(self, yml_file_path, product_repository):
-        super().__init__(mock_global_settings(), mock_profiles(), product_repository)
-        print("Creating configuration from file: " + yml_file_path)
+        supported_version = 1
+        print("Ładowanie konfiguracji z pliku: " + yml_file_path)
+
+        global_settings = None
+        profiles = []
+        with open(yml_file_path, "r", encoding="utf-8") as stream:
+            try:
+                config_file = yaml.safe_load(stream)
+
+                if config_file["version"] != supported_version:
+                    raise ValueError("Unsupported version of yml configuration file. File version: " + str(config_file["version"]) + " Supported version: " + str(supported_version))
+
+                file_global_settings = config_file["global_settings"]
+                num_of_people = file_global_settings["number_of_people"]
+                simulation = file_global_settings["simulation"]
+                start_month = simulation["start_month"]
+                start_year = simulation["start_year"]
+                end_month = simulation["end_month"]
+                end_year = simulation["end_year"]
+                date_probability_bonuses = simulation["date_probability_bonuses"]
+                needs_associations = simulation["needs_associations"]
+                profiles = config_file["profiles"]
+
+                global_settings = GlobalSettings(
+                    _determine_num_of_month(start_month),
+                    int(start_year),
+                    _determine_num_of_month(end_month),
+                    int(end_year),
+                    int(num_of_people),
+                    YMLConfiguration._parse_date_probability_bonuses(date_probability_bonuses),
+                    YMLConfiguration._parse_needs_associations(needs_associations)
+                )
+                profiles = YMLConfiguration._parse_profiles(profiles)
+            except yaml.YAMLError as exc:
+                print(exc)
+
+            stream.close()
+
+        print("Załadowano konfigurację: " + repr(global_settings))
+        print("Załadowano profile: " + repr(profiles))
+        super().__init__(global_settings, profiles, product_repository)
+
+    @staticmethod
+    def _parse_profiles(profiles):
+        def map_to_obj(profile):
+            name = profile["name"]
+            percent_of_people = profile["percent_of_people"]
+            daily_gts_prob = profile["daily_go_to_shop_probability"]
+            init_acc_balance = profile["initial_account_balance"]
+            salary_from = profile["salary"]["from"]
+            salary_to = profile["salary"]["to"]
+            needs = YMLConfiguration._parse_needs(profile["needs"])
+
+            return Profile(name, int(percent_of_people), float(init_acc_balance), int(salary_from), int(salary_to), needs, float(daily_gts_prob))
+
+        return list(map(lambda prof: map_to_obj(prof), profiles))
+
+    @staticmethod
+    def _parse_needs(needs):
+        def map_to_obj(need):
+            category = need["category"]
+            num_of_items = need["num_of_items"]
+            priority = need["priority"]
+            buy_probability = need["buy_probability"]
+
+            return Need(category, int(num_of_items), int(priority), float(buy_probability))
+
+        return list(map(lambda need: map_to_obj(need), needs))
+
+    @staticmethod
+    def _parse_needs_associations(needs_associations):
+        def map_to_object(need_ass):
+            category_a = need_ass["items_from_category"]
+            ass_type = need_ass["are"]
+            category_b = need_ass["with"]
+
+            if ass_type == "HIGHLY_ASSOCIATED" or ass_type == "ASSOCIATED":
+                relation = need_ass["by_relation"]
+                buy_probability = need_ass["with_buy_probability"]
+
+                if ass_type == "HIGHLY_ASSOCIATED":
+                    return StrongAssociation(category_a, category_b, relation, float(buy_probability))
+                else:
+                    return Association(category_a, category_b, relation, float(buy_probability))
+            else:
+                if ass_type == "LOOSELY_ASSOCIATED":
+                    need_probability = need_ass["with_need_probability"]
+                    buy_probability = need_ass["with_buy_probability"]
+
+                    return LooselyCoupledAssociation(category_a, category_b, float(need_probability), float(buy_probability))
+                else:
+                    raise ValueError("Unknown association type: " + ass_type)
+
+        return list(map(lambda need_ass: map_to_object(need_ass), needs_associations))
+
+    @staticmethod
+    def _parse_date_probability_bonuses(date_probability_bonuses):
+        def map_to_object(bonus):
+            b_from = datetime.datetime.strptime(bonus["from"], "%d.%m.%Y")
+            b_to = datetime.datetime.strptime(bonus["to"], "%d.%m.%Y")
+            gts_prob_multi = bonus["probability_multipliers"]["go_to_shop"]
+            buy_prob_multi = bonus["probability_multipliers"]["buy_item"]
+
+            return DateProbabilityBonus(b_from.day, b_from.month, b_from.year, b_to.day, b_to.month, b_to.year, int(gts_prob_multi), int(buy_prob_multi))
+
+        return list(map(lambda bonus: map_to_object(bonus), date_probability_bonuses))
 
 
 def mock_profiles():
@@ -687,6 +819,9 @@ class GlobalSettings:
         self.end_month = end_month
         self.start_month = start_month
 
+    def __repr__(self):
+        return "{start_month: " + str(self.start_month) + ", start_year: " + str(self.start_year) + ", end_month: " + str(self.end_month) + ", end_year: " + str(self.end_year) + ", population: " + str(self.population) + ", date_prob_bonuses: " + repr(self.date_probability_bonuses) + ", needs_associations: " + repr(self.needs_associations) + "}"
+
 
 class Profile:
     def __init__(self, name, percent_of_people, initial_account_balance, salary_from, salary_to, needs, go_to_shop_probability):
@@ -698,6 +833,8 @@ class Profile:
         self.name = name
         self.needs = needs
 
+    def __repr__(self):
+        return "Profile[name: " + self.name + ", percent_of_people: " + str(self.percent_of_people) + ", init_bank_acc: " + str(self.initial_account_balance) + ", salary_from: " + str(self.salary_from) + ", salary_to: " + str(self.salary_to) + ", needs: " + repr(self.needs) + ", go_to_shop_prob: " + str(self.go_to_shop_probability) + "]"
 
 class DateProbabilityBonus:
     def __init__(self, day_from, month_from, year_from, day_to, month_to, year_to, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
@@ -709,6 +846,9 @@ class DateProbabilityBonus:
 
     def date_has_bonus(self, date):
         return self._first_day <= date <= self._last_day
+
+    def __repr__(self):
+        return "DateProbBonus[" + _date_str(self._first_day) + " - " + _date_str(self._last_day) + ", buy_multiplier: " + str(self.buy_item_probability_multiplier) + ", gotoshop_multiplier: " + str(self.go_to_shop_probability_multiplier) + "]"
 
 
 class Need:
@@ -757,10 +897,16 @@ class StrongAssociation(ShoppingStageAssociation):
     def __init__(self, product_category_a, product_category_b, relation, buy_probability):
         super().__init__(product_category_a, product_category_b, relation, buy_probability)
 
+    def __repr__(self):
+        return "StrongAssociation[" + self.product_category_a + "=>" + self.product_category_b + ", relation: " + self.relation + ", buy probability: " + str(self.buy_probability) + "]"
+
 
 class Association(ShoppingStageAssociation):
     def __init__(self, product_category_a, product_category_b, relation, buy_probability):
         super().__init__(product_category_a, product_category_b, relation, buy_probability)
+
+    def __repr__(self):
+        return "Association[" + self.product_category_a + "=>" + self.product_category_b + ", relation: " + self.relation + ", buy probability: " + str(self.buy_probability) + "]"
 
 
 class LooselyCoupledAssociation(BaseAssociation):
@@ -768,6 +914,10 @@ class LooselyCoupledAssociation(BaseAssociation):
         super().__init__(product_category_a, product_category_b)
         self.buy_probability = buy_probability
         self.need_probability = need_probability
+
+    def __repr__(self):
+        return "LooselyCoupledAssociation[" + self.product_category_a + "=>" + self.product_category_b + ", need_probability: " + str(self.need_probability) + ", buy probability: " + str(self.buy_probability)
+
 
 
 class SimulationProgressEventHandler:

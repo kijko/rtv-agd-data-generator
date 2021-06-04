@@ -4,9 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
 pysqlite3 = "*"
 faker = "*"
+pyyaml = "*"
 
 [dev-packages]
 pyinstaller = "*"
