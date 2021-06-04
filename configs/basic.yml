@@ -9,24 +9,21 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
     end_month: DECEMBER                      # ostatni miesiąc symulacji
     end_year: 2021                       # rok zakończenia symulacji
     date_probability_bonuses:            # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
-      - from: 10.04.2020                 # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
+      - from: 10.04.2020                # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 15.04.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
         probability_multipliers:         # A prawdopodobieństwo kupienia przedmiotu jest 5 razy większe
           go_to_shop: 5                 # Analogicznie w zdarzeniu poniżej
           buy_item: 5
-
       - from: 20.12.2020                 # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
-        to: 31.04.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
+        to: 31.12.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
         probability_multipliers:         # A prawdopodobieństwo kupienia przedmiotu jest 5 razy większe
           go_to_shop: 2                 # Analogicznie w zdarzeniu poniżej
-          buy_item: 1.2
-
+          buy_item: 1
       - from: 20.12.2021
         to: 31.12.2021
         probability_multipliers:
           go_to_shop: 4
           buy_item: 2
-
       - from: 05.05.2021
         to: 05.05.2021
         probability_multipliers:
@@ -65,11 +62,27 @@ profiles:                                # ustawienia profili, dotyczące okreś
       from: 1000
       to: 2000
     needs:                               # potrzeby
-      - category: FRIDGE                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
-        num_of_items: 1                   # liczba przedmiotów do kupienia
+      - category: TELEWIZORY                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
+        num_of_items: 2                   # liczba przedmiotów do kupienia
         priority: 1                       # priorytet kupna (najmniejsza liczba ma największy priorytet)
         buy_probability: 0.6            # prawdopodobieństwo kupna (jeśli pójdzie do sklepu)
-      - category: TV                     # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+      - category: SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        num_of_items: 2                   # ilość przedmiotów z kategorii
+        priority: 2
+        buy_probability: 0.4
+      - category: SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        num_of_items: 2                   # ilość przedmiotów z kategorii
+        priority: 2
+        buy_probability: 0.4              # 0% na kupienie niczego
+      - category: SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        num_of_items: 2                   # ilość przedmiotów z kategorii
+        priority: 2
+        buy_probability: 0.4              # 0% na kupienie niczego
+      - category: SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        num_of_items: 2                   # ilość przedmiotów z kategorii
+        priority: 2
+        buy_probability: 0.4              # 0% na kupienie niczego
+      - category: SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
         num_of_items: 2                   # ilość przedmiotów z kategorii
         priority: 2
         buy_probability: 0.4              # 0% na kupienie niczego
