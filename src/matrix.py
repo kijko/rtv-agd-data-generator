@@ -760,7 +760,7 @@ class YMLConfiguration(Configuration):
 
                     return LooselyCoupledAssociation(category_a, category_b, float(need_probability), float(buy_probability))
                 else:
-                    raise ValueError("Unknown association type: " + ass_type)
+                    raise ValidationError.field_error("needs_associations.are", ass_type)
 
         return list(map(lambda need_ass: map_to_object(need_ass), needs_associations))
 
@@ -777,55 +777,63 @@ class YMLConfiguration(Configuration):
         return list(map(lambda bonus: map_to_object(bonus), date_probability_bonuses))
 
 
-def mock_profiles():
-    poor_guys_needs = [Need("FRIDGE", 0, 1, 0.6), Need("TV", 2, 0, 0.4), Need("GAME_CONSOLE", 3, 2, 0.2), Need("PHONE", 2, 3, 0.6)]
-    poor_guys_profile = Profile("POOR", 17, 1000, 1000, 2000, poor_guys_needs, 0.1)
-
-    middle_class_profile = Profile("MIDDLE_CLASS", 60, 2000, 3000, 5000, [Need("GAME_CONSOLE", 2, 1, 0.4)], 0.04)
-    rich_man_profile = Profile("RICH_MEN", 20, 3000, 10000, 15000, [Need("GAME_CONSOLE", 1, 1, 0.4)], 0.03)
-
-    profiles = [poor_guys_profile, middle_class_profile, rich_man_profile]
-
-    return profiles
-
-
-def mock_global_settings():
-    date_bonuses = [DateProbabilityBonus(10, 4, 2020, 15, 4, 2020, 10, 2), DateProbabilityBonus(5, 5, 2020, 5, 5, 2021, 4, 5)]
-
-    needs_associations = [
-        StrongAssociation("WIRELESS-GAMEPAD", "AAA-BATTERIES", one_to_one, 0.8),
-        StrongAssociation("COFFEE-MACHINE", "COFFEE", one_to_many, 0.5),
-        StrongAssociation("PHONE", "PHONE-CHARGER", one_to_one, 0.4),
-        StrongAssociation("PHONE-CHARGER", "PHONE-CABLE", one_to_one, 0.3),
-        Association("TV", "STREAMING-SERVICE-SUB", one_to_many, 0.9),
-        LooselyCoupledAssociation("FRIDGE", "WASHING_MACHINE", 0.8, 0.6),
-        LooselyCoupledAssociation("TV", "FRIDGE", 0.8, 0.6),
-        LooselyCoupledAssociation("PHONE", "TV", 0.8, 0.6)
-    ]
-
-    global_settings = GlobalSettings(1, 2020, 6, 2021, 10, date_bonuses, needs_associations)
-
-    return global_settings
-
-
-
-
 class GlobalSettings:
     def __init__(self, start_month, start_year, end_month, end_year, population, date_probability_bonuses, needs_associations):
+        self._validate(start_month, start_year, end_month, end_year, population)
+
         self.end_year = end_year
         self.start_year = start_year
         self.needs_associations = needs_associations
         self.date_probability_bonuses = date_probability_bonuses
-        self.population = population
+        self.population = int(population)
         self.end_month = end_month
         self.start_month = start_month
+
 
     def __repr__(self):
         return "{start_month: " + str(self.start_month) + ", start_year: " + str(self.start_year) + ", end_month: " + str(self.end_month) + ", end_year: " + str(self.end_year) + ", population: " + str(self.population) + ", date_prob_bonuses: " + repr(self.date_probability_bonuses) + ", needs_associations: " + repr(self.needs_associations) + "}"
 
+    def _validate(self, start_month, start_year, end_month, end_year, population):
+        if start_month < 1 or start_month > 12:
+            raise ValidationError.field_error("start_month", start_month)
+
+        if start_year < 1970 or start_year > end_year:
+            raise ValidationError.field_error("start_year", start_year)
+
+        if end_month < 1 or end_month > 12:
+            raise ValidationError.field_error("end_month", end_month)
+
+        if end_year < 1970 and end_year < start_year:
+            raise ValidationError.field_error("end_year", end_year)
+
+        if population < 0:
+            raise ValidationError.field_error("number_of_people", population)
+
+
 
 class Profile:
     def __init__(self, name, percent_of_people, initial_account_balance, salary_from, salary_to, needs, go_to_shop_probability):
+        if initial_account_balance < 0:
+            raise ValidationError.field_error("profile.initial_acc_balance", initial_account_balance)
+
+        if percent_of_people < 0:
+            raise ValidationError.field_error("profile.percent_of_people", percent_of_people)
+
+        if salary_from < 0 or salary_from > salary_to:
+            raise ValidationError.field_error("profile.salary_from", salary_from)
+
+        if salary_to < 0 or salary_to < salary_from:
+            raise ValidationError.field_error("profile.salary_to", salary_to)
+
+        if len(needs) == 0:
+            raise ValidationError.field_error("profile.needs", "!EMPTY!")
+
+        if go_to_shop_probability < 0.0 or go_to_shop_probability > 1.0:
+            raise ValidationError.field_error("profile.gotoshop_prob", go_to_shop_probability)
+
+        if len(name.strip()) == 0:
+            raise ValidationError.field_error("profile.name", "!EMPTY!")
+
         self.initial_account_balance = initial_account_balance
         self.salary_to = salary_to
         self.salary_from = salary_from
@@ -840,6 +848,13 @@ class Profile:
 class DateProbabilityBonus:
     def __init__(self, day_from, month_from, year_from, day_to, month_to, year_to, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
         self.year_from = year_from
+
+        if buy_item_probability_multiplier < 1:
+            raise ValidationError.field_error("jedno z date_probability_bonuses.probability_multipliers.buy_item", buy_item_probability_multiplier)
+
+        if go_to_shop_probability_multiplier < 1:
+            raise ValidationError.field_error("jedno z date_probability_bonuses.probability_multipliers.go_to_shop", go_to_shop_probability_multiplier)
+
         self.buy_item_probability_multiplier = buy_item_probability_multiplier
         self.go_to_shop_probability_multiplier = go_to_shop_probability_multiplier
         self._first_day = datetime.date(year_from, month_from, day_from)
@@ -854,6 +869,16 @@ class DateProbabilityBonus:
 
 class Need:
     def __init__(self, category, num_of_items, priority, buy_probability):
+
+        if buy_probability < 0.0 or buy_probability > 1.0:
+            raise ValidationError.field_error("need.buy_probability", buy_probability)
+
+        if num_of_items < 0:
+            raise ValidationError.field_error("need.num_of_items", num_of_items)
+
+        if len(category.strip()) == 0:
+            raise ValidationError.field_error("need.category", "!EMPTY!")
+
         self.buy_probability = buy_probability
         self.priority = priority
         self.num_of_items = num_of_items
@@ -883,6 +908,12 @@ one_to_many = "ONE_TO_MANY"
 
 class BaseAssociation:
     def __init__(self, product_category_a, product_category_b):
+        if len(product_category_a.strip()) == 0:
+            raise ValidationError.field_error("association.category_a", product_category_a)
+
+        if len(product_category_b.strip()) == 0:
+            raise ValidationError.field_error("association.category_b", product_category_b)
+
         self.product_category_b = product_category_b
         self.product_category_a = product_category_a
 
@@ -890,8 +921,18 @@ class BaseAssociation:
 class ShoppingStageAssociation(BaseAssociation):
     def __init__(self, product_category_a, product_category_b, relation, buy_probability):
         super().__init__(product_category_a, product_category_b)
+
+        if buy_probability < 0.0 or buy_probability > 1.0:
+            raise ValidationError.field_error("association.buy_probability", buy_probability)
+
+        is_not_one_to_one = relation.strip() != one_to_one
+        is_not_many_to_many = relation.strip() != one_to_many
+
+        if is_not_one_to_one and is_not_many_to_many:
+            raise ValidationError.field_error("association.relation", relation)
+
         self.buy_probability = buy_probability
-        self.relation = relation
+        self.relation = relation.strip()
 
 
 class StrongAssociation(ShoppingStageAssociation):
@@ -913,6 +954,13 @@ class Association(ShoppingStageAssociation):
 class LooselyCoupledAssociation(BaseAssociation):
     def __init__(self, product_category_a, product_category_b, need_probability, buy_probability):
         super().__init__(product_category_a, product_category_b)
+
+        if buy_probability < 0.0 or buy_probability > 1.0:
+            raise ValidationError.field_error("association.buy_probability", buy_probability)
+
+        if need_probability < 0.0 or need_probability > 1.0:
+            raise ValidationError.field_error("association.need_probability", need_probability)
+
         self.buy_probability = buy_probability
         self.need_probability = need_probability
 

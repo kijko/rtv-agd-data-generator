@@ -35,7 +35,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - items_from_category: TELEWIZORY
         are: HIGHLY_ASSOCIATED
         with: BATTERIES
-        by_relation: ONE_FOR_ONE
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
 
       - items_from_category: TV
