@@ -4,6 +4,7 @@ import random
 import queue
 import uuid
 import yaml
+from error import ValidationError
 
 _day = datetime.timedelta(days=1)
 
@@ -678,7 +679,7 @@ class YMLConfiguration(Configuration):
                 config_file = yaml.safe_load(stream)
 
                 if config_file["version"] != supported_version:
-                    raise ValueError("Unsupported version of yml configuration file. File version: " + str(config_file["version"]) + " Supported version: " + str(supported_version))
+                    raise ValidationError("Wersja pliku yml nie zgadza się z wersją obsługiwaną przez program. Zaktualizuj program lub strukturę pliku konfiguracyjnego. Wersja pliku: " + str(config_file["version"]) + " Wersja wspierana przez program: " + str(supported_version))
 
                 file_global_settings = config_file["global_settings"]
                 num_of_people = file_global_settings["number_of_people"]
@@ -701,8 +702,8 @@ class YMLConfiguration(Configuration):
                     YMLConfiguration._parse_needs_associations(needs_associations)
                 )
                 profiles = YMLConfiguration._parse_profiles(profiles)
-            except yaml.YAMLError as exc:
-                print(exc)
+            except Exception as exc:
+                raise ValidationError(repr(exc))
 
             stream.close()
 

@@ -5,6 +5,7 @@ from tkinter import filedialog
 
 from matrix import SimulationProgressEventHandler, YMLConfiguration
 from products import CSVInMemoryProductRepository
+from error import ValidationError
 
 
 def prepare_gui(run_simulation):
@@ -16,19 +17,21 @@ def prepare_gui(run_simulation):
     window.columnconfigure(0, weight=1)
     window.rowconfigure(0, weight=1)
 
-    input = SimulatorInput(None, None)
+    input = SimulatorInput()
 
     def on_config_load_button():
         config_file_path = filedialog.askopenfilename()
         config_path.set(config_file_path)
 
         input.yml_input_file_path = config_file_path
+        refresh_configuration()
 
     def on_products_load_button():
         products_file_path = filedialog.askopenfilename()
         products_path.set(products_file_path)
 
         input.csv_input_file_path = products_file_path
+        refresh_configuration()
 
     config_load_button = ttk.Button(mainframe, text="Wczytaj plik konfiguracyjny", command=on_config_load_button)
     config_load_button.grid(column=1, row=0, sticky=W)
@@ -69,15 +72,39 @@ def prepare_gui(run_simulation):
         def on_progress_change(self, persons_done, all_people):
             progress.set(str(persons_done) + " / " + str(all_people))
 
-    def run_simulation_on_as_new_thread():
-        product_repository = CSVInMemoryProductRepository(input.csv_input_file_path)
-        simulation_config = YMLConfiguration(input.yml_input_file_path, product_repository)
-        threading.Thread(
-            target=run_simulation,
-            args=(GUISimulationProgressHandler(), simulation_config)
-        ).start()
+    def refresh_configuration():
+        if input.csv_input_file_path is not None and input.yml_input_file_path is not None:
+            is_fine = True
+            try:
+                input.product_repository = CSVInMemoryProductRepository(input.csv_input_file_path)
+            except ValidationError as err:
+                is_fine = False
+                products_path.set(repr(err))
 
-    generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation_on_as_new_thread)
+            try:
+                input.simulation_config = YMLConfiguration(input.yml_input_file_path, input.product_repository)
+            except ValidationError as err:
+                is_fine = False
+                config_path.set(repr(err))
+
+            if is_fine:
+                generate_button.configure(state=NORMAL)
+            else:
+                generate_button.configure(state=DISABLED)
+
+        else:
+            generate_button.configure(state=DISABLED)
+
+    def run_simulation_on_as_new_thread():
+        if input.product_repository is not None and input.simulation_config is not None:
+            threading.Thread(
+                target=run_simulation,
+                args=(GUISimulationProgressHandler(), input.simulation_config)
+            ).start()
+        else:
+            print("Plik z produktami oraz konfiguracją muszą być określone")
+
+    generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation_on_as_new_thread, state=DISABLED)
     generate_button.grid(column=1, row=4, sticky=W)
 
     ttk.Label(mainframe).grid(column=2, row=0)
@@ -108,6 +135,8 @@ def run_gui(run_simulation):
 
 
 class SimulatorInput:
-    def __init__(self, product_file_path, config_file_path):
-        self.yml_input_file_path = config_file_path
-        self.csv_input_file_path = product_file_path
+    def __init__(self):
+        self.yml_input_file_path = None
+        self.csv_input_file_path = None
+        self.simulation_config = None
+        self.product_repository = None

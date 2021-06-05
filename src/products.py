@@ -1,28 +1,33 @@
 import csv
+from error import ValidationError
 
 
 class CSVInMemoryProductRepository:
     def __init__(self, csv_file_path):
         print("Creating product repo from file: " + csv_file_path)
-        self._products = []
 
-        with open(csv_file_path, "r", encoding='utf-8') as csv_file:
-            id = 1
-            reader = csv.reader(csv_file, delimiter=";")
+        try:
+            self._products = []
 
-            # omijamy nagłówek
-            next(reader, None)
+            with open(csv_file_path, "r", encoding='utf-8') as csv_file:
+                id = 1
+                reader = csv.reader(csv_file, delimiter=";")
 
-            for row in reader:
-                if len(row[0]) > 0 and len(row[1]) > 0 and len(row[2]) > 0:
-                    self._products.append(Product(id, row[0], float(row[1].replace(",", ".")), row[2]))
-                    id += 1
+                # omijamy nagłówek
+                next(reader, None)
 
-            print("   Wczytano " + str(len(self._products)) + " produktów: ")
-            for product in self._products:
-                print("      " + repr(product))
+                for row in reader:
+                    if len(row[0]) > 0 and len(row[1]) > 0 and len(row[2]) > 0:
+                        self._products.append(Product(id, row[0], float(row[1].replace(",", ".")), row[2]))
+                        id += 1
 
-            csv_file.close()
+                print("   Wczytano " + str(len(self._products)) + " produktów: ")
+                for product in self._products:
+                    print("      " + repr(product))
+
+                csv_file.close()
+        except Exception as e:
+            raise ValidationError(repr(e))
 
     def find_by_category_and_max_price(self, category, max_price):
         list_copy = self._products.copy()
