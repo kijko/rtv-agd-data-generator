@@ -13,6 +13,10 @@
 
 ```pipenv run python ./src/main.py```
 
+## Run and point output to dev-data folder
+
+```pipenv run python ./src/main.py ./dev-data```
+
 ## Build executable
 
 ```pipenv run pyinstaller --onefile ./src/main.py```

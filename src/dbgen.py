@@ -13,12 +13,12 @@ fake = Faker()
 
 # noinspection SqlNoDataSourceInspection
 class Database:
-    def __init__(self, products):
+    def __init__(self, products, output_dir):
         self._connection = None
         self._cursor = None
         try:
 
-            self._connection = sqlite3.connect("../dev-data/" + _prepare_db_name())
+            self._connection = sqlite3.connect(str(output_dir) + "/" + _prepare_db_name())
             self._cursor = self._connection.cursor()
 
             self._init_db(products)

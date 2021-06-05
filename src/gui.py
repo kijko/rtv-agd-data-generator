@@ -1,4 +1,5 @@
 import threading
+import sys
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
@@ -98,9 +99,14 @@ def prepare_gui(run_simulation):
 
     def run_simulation_on_as_new_thread():
         if input.product_repository is not None and input.simulation_config is not None:
+            output_dir = "."
+
+            if len(sys.argv) > 1:
+                output_dir = str(sys.argv[1])
+
             threading.Thread(
                 target=run_simulation,
-                args=(GUISimulationProgressHandler(), input.simulation_config)
+                args=(GUISimulationProgressHandler(), input.simulation_config, output_dir)
             ).start()
         else:
             print("Plik z produktami oraz konfiguracją muszą być określone")
