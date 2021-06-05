@@ -1,23 +1,21 @@
 from matrix import *
-import products
 import gui
 import dbgen
 # todo main-prod/main-dev
 
 
-def generate_big_data(progress_handler, simulator_input):
-    in_mem_product_repository = products.CSVInMemoryProductRepository(simulator_input.csv_input_file_path)
-    db = dbgen.Database(in_mem_product_repository.find_all())
+def generate_big_data(progress_handler, simulation_config):
+    db = dbgen.Database(simulation_config.product_repository.find_all())
 
-    config = YMLConfiguration(simulator_input.yml_input_file_path, in_mem_product_repository)
+    print(repr(simulation_config))
 
-    example_simulation = Matrix(
-        config,
+    simulation = Matrix(
+        simulation_config,
         db.get_collector(),
         progress_handler
     )
 
-    example_simulation.run()
+    simulation.run()
 
     db.end()
 

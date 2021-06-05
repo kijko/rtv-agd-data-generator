@@ -3,7 +3,8 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 
-from matrix import SimulationProgressEventHandler
+from matrix import SimulationProgressEventHandler, YMLConfiguration
+from products import CSVInMemoryProductRepository
 
 
 def prepare_gui(run_simulation):
@@ -69,7 +70,12 @@ def prepare_gui(run_simulation):
             progress.set(str(persons_done) + " / " + str(all_people))
 
     def run_simulation_on_as_new_thread():
-        threading.Thread(target=run_simulation, args=(GUISimulationProgressHandler(), input)).start()
+        product_repository = CSVInMemoryProductRepository(input.csv_input_file_path)
+        simulation_config = YMLConfiguration(input.yml_input_file_path, product_repository)
+        threading.Thread(
+            target=run_simulation,
+            args=(GUISimulationProgressHandler(), simulation_config)
+        ).start()
 
     generate_button = ttk.Button(mainframe, text="Generuj bazę", command=run_simulation_on_as_new_thread)
     generate_button.grid(column=1, row=4, sticky=W)
