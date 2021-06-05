@@ -89,6 +89,7 @@ def prepare_gui(run_simulation):
 
             if is_fine:
                 generate_button.configure(state=NORMAL)
+                progress.set("0 / " + str(input.simulation_config.global_settings.population))
             else:
                 generate_button.configure(state=DISABLED)
 
