@@ -29,11 +29,11 @@ def prepare_gui(run_simulation):
 
         input.csv_input_file_path = products_file_path
 
-    ttk.Button(mainframe, text="Wczytaj plik konfiguracyjny", command=on_config_load_button) \
-        .grid(column=1, row=0, sticky=W)
+    config_load_button = ttk.Button(mainframe, text="Wczytaj plik konfiguracyjny", command=on_config_load_button)
+    config_load_button.grid(column=1, row=0, sticky=W)
 
-    ttk.Button(mainframe, text="Wczytaj plik z produktami", command=on_products_load_button) \
-        .grid(column=1, row=1, sticky=W)
+    products_load_button = ttk.Button(mainframe, text="Wczytaj plik z produktami", command=on_products_load_button)
+    products_load_button.grid(column=1, row=1, sticky=W)
 
     config_path = StringVar()
     config_path.set("Nie wybrano pliku")
@@ -45,15 +45,25 @@ def prepare_gui(run_simulation):
     ttk.Label(mainframe, text="Plik z produktami: ").grid(column=0, row=3, sticky=W)
     ttk.Label(mainframe, textvariable=products_path).grid(column=1, row=3, sticky=W)
 
+    def freeze_buttons():
+        config_load_button.configure(state=DISABLED)
+        products_load_button.configure(state=DISABLED)
+        generate_button.configure(state=DISABLED)
+
+    def unfreeze_buttons():
+        config_load_button.configure(state=NORMAL)
+        products_load_button.configure(state=NORMAL)
+        generate_button.configure(state=NORMAL)
+
     class GUISimulationProgressHandler(SimulationProgressEventHandler):
         def on_start(self):
             progress.set("0 / 0")
             status.set("Symulacja trwa...")
-            generate_button.configure(state=DISABLED)
+            freeze_buttons()
 
         def on_end(self):
             status.set("Symulacja zakończona")
-            generate_button.configure(state=NORMAL)
+            unfreeze_buttons()
 
         def on_progress_change(self, persons_done, all_people):
             progress.set(str(persons_done) + " / " + str(all_people))
@@ -76,6 +86,12 @@ def prepare_gui(run_simulation):
 
     for child in mainframe.winfo_children():
         child.grid_configure(padx=5, pady=5)
+
+    def on_close():
+        print("CLOSING")
+        window.destroy()
+
+    window.protocol("WM_DELETE_WINDOW", on_close)
 
     return window
 
