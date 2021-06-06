@@ -2,12 +2,12 @@
 version: 1
 
 global_settings:                         # ustawienia globalne, dotyczące wszystkich
-  number_of_people: 1000                 # liczba osób w symulacji
+  number_of_people: 99                 # liczba osób w symulacji
   simulation:
     start_month: JANUARY                 # pierwszy miesiąc symulacji
     start_year: 2020                     # rok początku symulacji
     end_month: DECEMBER                      # ostatni miesiąc symulacji
-    end_year: 2021                       # rok zakończenia symulacji
+    end_year: 2020                      # rok zakończenia symulacji
     date_probability_bonuses:            # zdarzenia w których jest większe prawopodobieństwo na pójście do sklepu
       - from: 10.04.2020                # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 15.04.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
@@ -34,15 +34,388 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
     needs_associations:
       - items_from_category: TELEWIZORY
         are: HIGHLY_ASSOCIATED
-        with: BATTERIES
+        with: UCHWYTY-TV
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
-
-      - items_from_category: TV
+      - items_from_category: TELEWIZORY
+        are: LOOSELY_ASSOCIATED
+        with: KONSOLE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.2
+      - items_from_category: TELEWIZORY
         are: ASSOCIATED
-        with: NETFLIX_SUB
-        by_relation: ONE_TO_MANY
+        with: NETFLIX
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.6
+      - items_from_category: TELEWIZORY
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
+      - items_from_category: TELEWIZORY
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+
+ ####################################################3
+      - items_from_category: LODÓWKI
+        are: LOOSELY_ASSOCIATED
+        with: ZMYWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.6
+      - items_from_category: LODÓWKI
+        are: LOOSELY_ASSOCIATED
+        with: PRALKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.8
+      - items_from_category: LODÓWKI
+        are: HIGHLY_ASSOCIATED
+        with: AKCESORIA-LODÓWKI
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: LODÓWKI
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: LODÓWKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ #######################################
+      - items_from_category: PRALKI
+        are: LOOSELY_ASSOCIATED
+        with: ZMYWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.6
+      - items_from_category: PRALKI
+        are: LOOSELY_ASSOCIATED
+        with: LODÓWKA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.8
+      - items_from_category: PRALKI
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: PRALKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+#######################
+      - items_from_category: MIKROFALÓWKI
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: MIKROFALÓWKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: KUCHENKI
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: KUCHENKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: KUCHENKI
+        are: ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: KUCHENKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTFONY-DO-600
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTFONY-DO-600
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-DO-600
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-DO-600
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTFONY-DO-600
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-DO-600
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTFONY-OD-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTFONY-OD-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-4K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-4K
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTFONY-OD-4K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTFONY-OD-4K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: IPHONE-DO-3K
+        are: HIGHLY_ASSOCIATED
+        with: IPHONE-KABLE
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: IPHONE-DO-3K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTWATCHE-APPLE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-DO-3K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-DO-3K
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: IPHONE-DO-3K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-DO-3K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: IPHONE-OD-3K
+        are: HIGHLY_ASSOCIATED
+        with: IPHONE-KABLE
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: IPHONE-OD-3K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTWATCHE-APPLE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-OD-3K
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-OD-3K
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: IPHONE-OD-3K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPHONE-OD-3K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: IPADY
+        are: HIGHLY_ASSOCIATED
+        with: IPHONE-KABLE
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: IPADY
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-ŁADOWARKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPADY
+        are: ASSOCIATED
+        with: POWERBANKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: IPADY
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: IPADY
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTWATCHE
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTWATCHE
+        are: ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTWATCHE
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTWATCHE
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: SMARTFONY-KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: ASSOCIATED
+        with: SMARTFONY-KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SMARTWATCHE-PREMIUM
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+
+
 
       - items_from_category: FRIDGE
         are: LOOSELY_ASSOCIATED
