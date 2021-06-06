@@ -141,12 +141,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTFONY-DO-600
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTFONY-DO-600
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
       - items_from_category: SMARTFONY-DO-600
@@ -172,12 +172,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTFONY-OD-600-DO-2K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTFONY-OD-600-DO-2K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
       - items_from_category: SMARTFONY-OD-600-DO-2K
@@ -203,12 +203,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTFONY-OD-2K-DO-4K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTFONY-OD-2K-DO-4K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
       - items_from_category: SMARTFONY-OD-2K-DO-4K
@@ -234,12 +234,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTFONY-OD-4K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTFONY-OD-4K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
       - items_from_category: SMARTFONY-OD-4K
@@ -353,12 +353,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTWATCHE
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTWATCHE
         are: ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
       - items_from_category: SMARTWATCHE
@@ -374,12 +374,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 ########################
       - items_from_category: SMARTWATCHE-PREMIUM
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
       - items_from_category: SMARTWATCHE-PREMIUM
         are: ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
       - items_from_category: SMARTWATCHE-PREMIUM
@@ -393,27 +393,264 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
 ########################
-      - items_from_category: SMARTWATCHE-PREMIUM
+      - items_from_category: TABLETY-DO-2K
         are: HIGHLY_ASSOCIATED
-        with: SMARTFONY-KABLE-MICRO-USB
+        with: KABLE-MICRO-USB
         by_relation: ONE_TO_MANY
         with_buy_probability: 0.8
-      - items_from_category: SMARTWATCHE-PREMIUM
+      - items_from_category: TABLETY-DO-2K
         are: ASSOCIATED
-        with: SMARTFONY-KABLE-TYP-C
+        with: KABLE-TYP-C
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
-      - items_from_category: SMARTWATCHE-PREMIUM
+      - items_from_category: TABLETY-DO-2K
         are: HIGHLY_ASSOCIATED
         with: PRZEDŁUŻONA-GWARANCJA
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
-      - items_from_category: SMARTWATCHE-PREMIUM
+      - items_from_category: TABLETY-DO-2K
         are: ASSOCIATED
         with: UBEZPIECZENIE
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
 ########################
+      - items_from_category: TABLETY-OD-2K
+        are: HIGHLY_ASSOCIATED
+        with: KABLE-MICRO-USB
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: TABLETY-OD-2K
+        are: ASSOCIATED
+        with: KABLE-TYP-C
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: TABLETY-OD-2K
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: TABLETY-OD-2K
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: LAPTOPY
+        are: HIGHLY_ASSOCIATED
+        with: TORBY-NA-LAPTOP
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: LAPTOPY
+        are: ASSOCIATED
+        with: MYSZKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: LAPTOPY
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: LAPTOPY
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: LAPTOPY-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: TORBY-NA-LAPTOP
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: LAPTOPY-PREMIUM
+        are: ASSOCIATED
+        with: MYSZKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: LAPTOPY-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: LAPTOPY-PREMIUM
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: KOMPUTERY-PC
+        are: HIGHLY_ASSOCIATED
+        with: MONITORY
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KOMPUTERY-PC
+        are: HIGHLY_ASSOCIATED
+        with: KLAWIATURY
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KOMPUTERY-PC
+        are: ASSOCIATED
+        with: MYSZKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: KOMPUTERY-PC
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: KOMPUTERY-PC
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: KOMPUTERY-PC-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: MONITORY-PREMIUM
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KOMPUTERY-PC-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: KLAWIATURY
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KOMPUTERY-PC-PREMIUM
+        are: ASSOCIATED
+        with: MYSZKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: KOMPUTERY-PC-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: KOMPUTERY-PC-PREMIUM
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: KONSOLE
+        are: HIGHLY_ASSOCIATED
+        with: AKCESORIA-KONSOLE
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KONSOLE
+        are: HIGHLY_ASSOCIATED
+        with: KONSOLE-GRY
+        by_relation: ONE_TO_MANY
+        with_buy_probability: 0.8
+      - items_from_category: KONSOLE
+        are: ASSOCIATED
+        with: SŁUCHAWKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+      - items_from_category: KONSOLE
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: KONSOLE
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+########################
+      - items_from_category: DRUKARKI
+        are: HIGHLY_ASSOCIATED
+        with: TONERY
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: DRUKARKI
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: DRUKARKI
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
+      - items_from_category: EKSPRESY
+        are: HIGHLY_ASSOCIATED
+        with: KAWY
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: EKSPRESY
+        are: HIGHLY_ASSOCIATED
+        with: MŁYNKI-ELEKTRYCZNE
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: EKSPRESY
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: EKSPRESY
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
+      - items_from_category: EKSPRESY-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: KAWY
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: EKSPRESY-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: MŁYNKI-ELEKTRYCZNE
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: EKSPRESY-PREMIUM
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: EKSPRESY-PREMIUM
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
+      - items_from_category: ŻELAZKA
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: ŻELAZKA
+        are: ASSOCIATED
+        with: DESKI
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: ŻELAZKA
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
+      - items_from_category: ODKURZACZE
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: ODKURZACZE
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
+      - items_from_category: SUSZARKI-DO-WŁOSÓW
+        are: HIGHLY_ASSOCIATED
+        with: PRZEDŁUŻONA-GWARANCJA
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.5
+      - items_from_category: SUSZARKI-DO-WŁOSÓW
+        are: ASSOCIATED
+        with: UBEZPIECZENIE
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.3
+ ####################################
 
 
 
