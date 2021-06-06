@@ -38,7 +38,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
       - items_from_category: TELEWIZORY
-        are: LOOSELY_ASSOCIATED
+        are: ASSOCIATED
         with: KONSOLE
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.2
@@ -60,12 +60,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
 
  ####################################################3
       - items_from_category: LODÓWKI
-        are: LOOSELY_ASSOCIATED
+        are: ASSOCIATED
         with: ZMYWARKI
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: LODÓWKI
-        are: LOOSELY_ASSOCIATED
+        are: ASSOCIATED
         with: PRALKI
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
@@ -86,12 +86,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         with_buy_probability: 0.3
  #######################################
       - items_from_category: PRALKI
-        are: LOOSELY_ASSOCIATED
+        are: ASSOCIATED
         with: ZMYWARKI
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: PRALKI
-        are: LOOSELY_ASSOCIATED
+        are: ASSOCIATED
         with: LODÓWKA
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
@@ -558,7 +558,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - items_from_category: DRUKARKI
         are: HIGHLY_ASSOCIATED
         with: TONERY
-        with_need_probability: 0.2
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: DRUKARKI
         are: HIGHLY_ASSOCIATED
@@ -574,12 +574,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - items_from_category: EKSPRESY
         are: HIGHLY_ASSOCIATED
         with: KAWY
-        with_need_probability: 0.2
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: EKSPRESY
         are: HIGHLY_ASSOCIATED
         with: MŁYNKI-ELEKTRYCZNE
-        with_need_probability: 0.2
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: EKSPRESY
         are: HIGHLY_ASSOCIATED
@@ -595,12 +595,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - items_from_category: EKSPRESY-PREMIUM
         are: HIGHLY_ASSOCIATED
         with: KAWY
-        with_need_probability: 0.2
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: EKSPRESY-PREMIUM
         are: HIGHLY_ASSOCIATED
         with: MŁYNKI-ELEKTRYCZNE
-        with_need_probability: 0.2
+        by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
       - items_from_category: EKSPRESY-PREMIUM
         are: HIGHLY_ASSOCIATED
@@ -651,14 +651,11 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
  ####################################
-
-
-
-      - items_from_category: FRIDGE
-        are: LOOSELY_ASSOCIATED
-        with: WASHING_MACHINE
-        with_need_probability: 0.2
-        with_buy_probability: 0.6
+     # - items_from_category: FRIDGE
+      #  are: LOOSELY_ASSOCIATED
+     #   with: WASHING_MACHINE
+      #  with_need_probability: 0.2
+     #   with_buy_probability: 0.6
 
 # Highly associate - main product requires associated one to be functional
 # Associated - associated product is frequently used with the main one, but it's not required for main one to be functional
