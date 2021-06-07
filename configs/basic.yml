@@ -2,7 +2,7 @@
 version: 1
 
 global_settings:                         # ustawienia globalne, dotyczące wszystkich
-  number_of_people: 99                 # liczba osób w symulacji
+  number_of_people: 1000000                 # liczba osób w symulacji
   simulation:
     start_month: JANUARY                 # pierwszy miesiąc symulacji
     start_year: 2020                     # rok początku symulacji
@@ -809,7 +809,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
 ##################
   ###################
   - name: GRUPA2                           # nazwa grupy (klasy spolecznej)
-    percent_of_people: 60                # jaki procent całości stanowi dana grupa
+    percent_of_people: 50               # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     initial_account_balance: 2000         # Kwota, którą osoba ma na start
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
@@ -1149,7 +1149,7 @@ profiles:                                # ustawienia profili, dotyczące okreś
         num_of_items: 2
         priority: 1
         buy_probability: 0.4
-      - category: KONSOLE           
+      - category: KONSOLE
         num_of_items: 2
         priority: 1
         buy_probability: 0.4
