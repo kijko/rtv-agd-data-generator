@@ -704,16 +704,37 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         with_need_probability: 0.2
         with_buy_probability: 0.6
 
+      - items_from_category: SMARTFONY-DO-600
+        are: LOOSELY_ASSOCIATED
+        with: GŁOŚNIKI-BLUETOOTH
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: LOOSELY_ASSOCIATED
+        with: GŁOŚNIKI-BLUETOOTH
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: LOOSELY_ASSOCIATED
+        with: GŁOŚNIKI-BLUETOOTH
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: SMARTFONY-OD-4K
+        are: LOOSELY_ASSOCIATED
+        with: GŁOŚNIKI-BLUETOOTH
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
 
 
 
-
+#############################################
+####################################
 # Highly associate - main product requires associated one to be functional
 # Associated - associated product is frequently used with the main one, but it's not required for main one to be functional
 # Loosely associated - associated product is not used with main one at all but sometimes they are bought together. For example if people are buying AGD for brand new flat
 profiles:                                # ustawienia profili, dotyczące określonej części ludzi
   - name: GRUPA1                           # nazwa grupy (klasy spolecznej)
-    percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    percent_of_people: 20               # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     initial_account_balance: 1000         # Kwota, którą osoba ma na start
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
@@ -721,206 +742,428 @@ profiles:                                # ustawienia profili, dotyczące okreś
       to: 2000
     needs:                               # potrzeby
       - category: TELEWIZORY                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
-        num_of_items: 2                   # liczba przedmiotów do kupienia
+        num_of_items: 1                   # liczba przedmiotów do kupienia
         priority: 1                       # priorytet kupna (najmniejsza liczba ma największy priorytet)
         buy_probability: 0.6            # prawdopodobieństwo kupna (jeśli pójdzie do sklepu)
-      - category: UCHWYTY-TV                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
+      - category:  SŁUCHAWKI
+        num_of_items: 1
         priority: 2
         buy_probability: 0.4
-      - category: SŁUCHAWKI-IPHONE                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4              # 0% na kupienie niczego
-      - category:  SŁUCHAWKI                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4              # 0% na kupienie niczego
-      - category: HI-FI-AUDIO               # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4              # 0% na kupienie niczego
-      - category: LODÓWKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
+      - category: LODÓWKI
+        num_of_items: 1
+        priority: 3
         buy_probability: 0.4
-      - category: AKCESORIA-LODÓWKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
+      - category: MIKROFALÓWKI
+        num_of_items: 1
+        priority: 4
         buy_probability: 0.4
-      - category: PRALKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
+      - category: SMARTFONY-OD-600-DO-2K
+        num_of_items: 1
+        priority: 5
         buy_probability: 0.4
-      - category: ZMYWARKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
+      - category: SMARTFONY-OD-2K-DO-4K
+        num_of_items: 1
+        priority: 5
         buy_probability: 0.4
-      - category: AKCESORIA-ZMYWARKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: MIKROFALÓWKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: KUCHENKI              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-DO-600              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-OD-600-DO-2K              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-OD-2K-DO-4K              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-OD-4K              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: IPHONE-DO-3K              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: IPHONE-OD-3K              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: IPHONE-KABLE              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-KABLE-TYP-C              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-KABLE-MICRO-USB              # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
-        num_of_items: 2                   # ilość przedmiotów z kategorii
-        priority: 2
-        buy_probability: 0.4
-      - category: SMARTFONY-ŁADOWARKI
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: POWERBANKI
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: SMARTWATCHE-APPLE
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: IPADY
-        num_of_items: 2
-        buy_probability: 0.4
+
       - category: SMARTWATCHE
         num_of_items: 2
+        priority: 6
         buy_probability: 0.4
-      - category: SMARTWATCHE-PREMIUM
-        num_of_items: 2
-        buy_probability: 0.4
+
       - category: TABLETY-DO-2K
         num_of_items: 2
-        buy_probability: 0.4
-      - category: TABLETY-OD-2K
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: GŁOŚNIKI-BLUETOOTH
-        num_of_items: 2
+        priority: 6
         buy_probability: 0.4
       - category: LAPTOPY
-        num_of_items: 2
+        num_of_items: 1
+        priority: 6
         buy_probability: 0.4
-      - category: LAPTOPY-PREMIUM
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: MONITORY-PREMIUM
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: KOMPUTERY-PC-PREMIUM
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: KOMPUTERY-PC
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: TORBY-NA-LAPTOP
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: MYSZKI
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: KLAWIATURY
-        num_of_items: 2
-        buy_probability: 0.4
+
       - category: DRUKARKI
         num_of_items: 2
+        priority: 7
         buy_probability: 0.4
       - category: TONERY
         num_of_items: 2
-        buy_probability: 0.4
-      - category: KONSOLE
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: AKCESORIA-KONSOLE
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: KONSOLE-GRY
-        num_of_items: 2
+        priority: 7
         buy_probability: 0.4
       - category: KAMERY-SAMOCHODOWE
         num_of_items: 2
-        buy_probability: 0.4
-      - category: EKSPRESY-PREMIUM
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: EKSPRESY
-        num_of_items: 2
+        priority: 7
         buy_probability: 0.4
       - category: CZAJNIKI
         num_of_items: 2
+        priority: 7
         buy_probability: 0.4
-      - category: KAWY
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: MŁYNKI-ELEKTRYCZNE
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: ODKURZACZE
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: ŻELAZKA
-        num_of_items: 2
-        buy_probability: 0.4
-      - category: DESKI
-        num_of_items: 2
-        buy_probability: 0.4
+
       - category: SUSZARKI-DO-UBRAŃ
         num_of_items: 2
+        priority: 2
         buy_probability: 0.4
       - category: SUSZARKI-DO-WŁOSÓW
         num_of_items: 2
+        priority: 2
         buy_probability: 0.4
-              
 
-
-  - name: GRUPA2                   # nazwa grupy (klasy spolecznej)
+##################
+  ###################
+  - name: GRUPA2                           # nazwa grupy (klasy spolecznej)
     percent_of_people: 60                # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
-    initial_account_balance: 2000
+    initial_account_balance: 2000         # Kwota, którą osoba ma na start
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
       from: 3000
       to: 5000
     needs:                               # potrzeby
-      - category: GAME_CONSOLE           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+      - category: TELEWIZORY                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
+        num_of_items: 2                   # liczba przedmiotów do kupienia
+        priority: 1                       # priorytet kupna (najmniejsza liczba ma największy priorytet)
+        buy_probability: 0.6            # prawdopodobieństwo kupna (jeśli pójdzie do sklepu)
+      - category:  SŁUCHAWKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: HI-FI-AUDIO
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: LODÓWKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: PRALKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ZMYWARKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: MIKROFALÓWKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KUCHENKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SMARTFONY-OD-600-DO-2K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SMARTFONY-OD-2K-DO-4K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: IPHONE-DO-3K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: POWERBANKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: SMARTWATCHE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: TABLETY-DO-2K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: GŁOŚNIKI-BLUETOOTH
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: LAPTOPY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: MONITORY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KOMPUTERY-PC
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: MYSZKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KLAWIATURY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: DRUKARKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: KONSOLE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: KONSOLE-GRY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KAMERY-SAMOCHODOWE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: EKSPRESY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: CZAJNIKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: MŁYNKI-ELEKTRYCZNE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ODKURZACZE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ŻELAZKA
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: DESKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SUSZARKI-DO-UBRAŃ
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SUSZARKI-DO-WŁOSÓW
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+################
+   ####################
+  - name: GRUPA3                           # nazwa grupy (klasy spolecznej)
+    percent_of_people: 20                # jaki procent całości stanowi dana grupa
+    daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
+    initial_account_balance: 3000         # Kwota, którą osoba ma na start
+    salary: # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
+      from: 10000
+      to: 15000
+    needs:                               # potrzeby
+      - category: TELEWIZORY                 # 60% na kupno przedmiotu z kategorii lodówka (pod warunkiem że pójdzie do sklepu. Patrz daily_go_to_shop_probability)
+        num_of_items: 2                   # liczba przedmiotów do kupienia
+        priority: 1                       # priorytet kupna (najmniejsza liczba ma największy priorytet)
+        buy_probability: 0.6            # prawdopodobieństwo kupna (jeśli pójdzie do sklepu)
+      - category: SŁUCHAWKI-IPHONE                # 50% na kupno przedmiotu z kategorii telewizory (jak wyżej)
+        num_of_items: 2                   # ilość przedmiotów z kategorii
+        priority: 2
+        buy_probability: 0.4
+      - category: HI-FI-AUDIO
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: LODÓWKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: PRALKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ZMYWARKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: KUCHENKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: SMARTFONY-OD-2K-DO-4K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SMARTFONY-OD-4K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: IPHONE-DO-3K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: IPHONE-OD-3K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: POWERBANKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SMARTWATCHE-APPLE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: IPADY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: SMARTWATCHE-PREMIUM
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: TABLETY-OD-2K
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+      - category: LAPTOPY-PREMIUM
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: MONITORY-PREMIUM
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KOMPUTERY-PC-PREMIUM
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: MYSZKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KLAWIATURY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: DRUKARKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: TONERY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KONSOLE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: AKCESORIA-KONSOLE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KONSOLE-GRY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KAMERY-SAMOCHODOWE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: EKSPRESY-PREMIUM
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: KAWY
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: MŁYNKI-ELEKTRYCZNE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ODKURZACZE
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: ŻELAZKA
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: DESKI
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SUSZARKI-DO-UBRAŃ
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+      - category: SUSZARKI-DO-WŁOSÓW
+        num_of_items: 2
+        priority: 2
+        buy_probability: 0.4
+
+##############################
+  ##########################
+  - name: GRUPA-PREMIUM                   # nazwa grupy (klasy spolecznej)
+    percent_of_people: 10               # jaki procent całości stanowi dana grupa
+    daily_go_to_shop_probability: 0.03   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
+    initial_account_balance: 3000
+    salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
+      from: 10000
+      to: 15000
+    needs:                               # potrzeby
+      - category: IPHONE-OD-3K            # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: SMARTFONY-OD-4K           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: SMARTWATCHE-APPLE           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: SMARTWATCHE-PREMIUM           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: LAPTOPY-PREMIUM           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: MONITORY-PREMIUM           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: KOMPUTERY-PC-PREMIUM           # 80% na kupno kosnoli (pod warunkiem pójścia do sklepu)
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: KONSOLE           
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: AKCESORIA-KONSOLE
+        num_of_items: 2
+        priority: 1
+        buy_probability: 0.4
+      - category: EKSPRESY-PREMIUM
         num_of_items: 2
         priority: 1
         buy_probability: 0.4
 
-  - name: GRUPA3                       # nazwa grupy (klasy spolecznej)
-    percent_of_people: 20                # jaki procent całości stanowi dana grupa
+  - name: GRUPA5                       # nazwa grupy (klasy spolecznej)
+    percent_of_people: 0                # jaki procent całości stanowi dana grupa
     daily_go_to_shop_probability: 0.05   # prawdopodobieństwo, że osoba pójdzie do sklepu danego dnia
     initial_account_balance: 3000       # Kwota, którą osoba ma na start
     salary:                              # kwota (zawieraca sie w przedziale from-to) jaką osoba odkłada pierwszego dnia każdego miesiąca na poniższe potrzeby
