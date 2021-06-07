@@ -4,7 +4,7 @@ from error import ValidationError
 
 class CSVInMemoryProductRepository:
     def __init__(self, csv_file_path):
-        print("Creating product repo from file: " + csv_file_path)
+        # print("Creating product repo from file: " + csv_file_path)
 
         try:
             self._products = []
@@ -21,9 +21,9 @@ class CSVInMemoryProductRepository:
                         self._products.append(Product(id, row[0], float(row[1].replace(",", ".")), row[2]))
                         id += 1
 
-                print("   Wczytano " + str(len(self._products)) + " produktów: ")
-                for product in self._products:
-                    print("      " + repr(product))
+                # print("   Wczytano " + str(len(self._products)) + " produktów: ")
+                # for product in self._products:
+                #     print("      " + repr(product))
 
                 csv_file.close()
         except Exception as e:

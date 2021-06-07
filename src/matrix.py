@@ -161,6 +161,7 @@ class Person:
             # print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
 
             calculated_buy_prob = buy_probability * probability_multiplier
+            # print("DOES HE WANT IT - normal probability: " + str(buy_probability) + ", multiplier: " + str(probability_multiplier) + ", calculated: " + str(calculated_buy_prob))
             if calculated_buy_prob >= 1.0:
                 buy_probability = 1.0
             else:
@@ -209,6 +210,7 @@ class Person:
             # print("        Bonus ! Prawdopodobieństwo kupna przedmiotu x" + str(probability_multiplier))
 
             calculated_buy_prob = buy_probability * probability_multiplier
+            # print("DOES HE WANT ASSOCIATED: bonus prob: " + str(association.buy_probability) + ", multiplier: " + str(probability_multiplier) + ", calc: " + str(calculated_buy_prob))
             if calculated_buy_prob >= 1.0:
                 buy_probability = 1.0
             else:
@@ -611,6 +613,8 @@ class World:
             bonus_probability = person.go_to_shop_probability * gts_multiplier
             # print("    prawdopodobieństwo po bonusie wynosi: " + str(bonus_probability))
 
+            # print("WILL GO TO SHOP: go to shop prob: " + str(person.go_to_shop_probability) + ", multiplier: " + str(gts_multiplier) + ", calc: " + str(bonus_probability))
+
             if bonus_probability >= 1.0:
                 # print("    Napewno pójdzie do sklepu")
                 return True
@@ -670,7 +674,7 @@ class YMLConfiguration(Configuration):
 
     def __init__(self, yml_file_path, product_repository):
         supported_version = 1
-        print("Ładowanie konfiguracji z pliku: " + yml_file_path)
+        # print("Ładowanie konfiguracji z pliku: " + yml_file_path)
 
         global_settings = None
         profiles = []
@@ -707,8 +711,8 @@ class YMLConfiguration(Configuration):
 
             stream.close()
 
-        print("Załadowano konfigurację: " + repr(global_settings))
-        print("Załadowano profile: " + repr(profiles))
+        # print("Załadowano konfigurację: " + repr(global_settings))
+        # print("Załadowano profile: " + repr(profiles))
         super().__init__(global_settings, profiles, product_repository)
 
     @staticmethod
@@ -772,7 +776,7 @@ class YMLConfiguration(Configuration):
             gts_prob_multi = bonus["probability_multipliers"]["go_to_shop"]
             buy_prob_multi = bonus["probability_multipliers"]["buy_item"]
 
-            return DateProbabilityBonus(b_from.day, b_from.month, b_from.year, b_to.day, b_to.month, b_to.year, int(gts_prob_multi), int(buy_prob_multi))
+            return DateProbabilityBonus(b_from.day, b_from.month, b_from.year, b_to.day, b_to.month, b_to.year, float(gts_prob_multi), float(buy_prob_multi))
 
         return list(map(lambda bonus: map_to_object(bonus), date_probability_bonuses))
 
@@ -849,10 +853,10 @@ class DateProbabilityBonus:
     def __init__(self, day_from, month_from, year_from, day_to, month_to, year_to, go_to_shop_probability_multiplier, buy_item_probability_multiplier):
         self.year_from = year_from
 
-        if buy_item_probability_multiplier < 1:
+        if buy_item_probability_multiplier < 0.0:
             raise ValidationError.field_error("jedno z date_probability_bonuses.probability_multipliers.buy_item", buy_item_probability_multiplier)
 
-        if go_to_shop_probability_multiplier < 1:
+        if go_to_shop_probability_multiplier < 0.0:
             raise ValidationError.field_error("jedno z date_probability_bonuses.probability_multipliers.go_to_shop", go_to_shop_probability_multiplier)
 
         self.buy_item_probability_multiplier = buy_item_probability_multiplier

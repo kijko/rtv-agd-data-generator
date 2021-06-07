@@ -128,7 +128,7 @@ def prepare_gui(run_simulation):
         child.grid_configure(padx=5, pady=5)
 
     def on_close():
-        print("CLOSING")
+        # print("CLOSING")
         window.destroy()
 
     window.protocol("WM_DELETE_WINDOW", on_close)
