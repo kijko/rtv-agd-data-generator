@@ -30,7 +30,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
           go_to_shop: 4
           buy_item: 2
 
-
+########## MOCNE I SŁABE POWIĄZANIA POWIĄZANIA - REGUŁY SEKWENCYJNE
     needs_associations:
       - items_from_category: TELEWIZORY
         are: HIGHLY_ASSOCIATED
@@ -38,10 +38,10 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
       - items_from_category: TELEWIZORY
-        are: ASSOCIATED
-        with: KONSOLE
+        are: HIGHLY_ASSOCIATED
+        with: KLAWIATURY
         by_relation: ONE_TO_ONE
-        with_buy_probability: 0.2
+        with_buy_probability: 0.8
       - items_from_category: TELEWIZORY
         are: ASSOCIATED
         with: NETFLIX
@@ -58,17 +58,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
 
- ####################################################3
-      - items_from_category: LODÓWKI
-        are: ASSOCIATED
-        with: ZMYWARKI
-        by_relation: ONE_TO_ONE
-        with_buy_probability: 0.6
-      - items_from_category: LODÓWKI
-        are: ASSOCIATED
-        with: PRALKI
-        by_relation: ONE_TO_ONE
-        with_buy_probability: 0.8
+ ####################################################
       - items_from_category: LODÓWKI
         are: HIGHLY_ASSOCIATED
         with: AKCESORIA-LODÓWKI
@@ -117,12 +107,12 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
 ########################
-      - items_from_category: KUCHENKI
+      - items_from_category: ZMYWARKI
         are: ASSOCIATED
         with: PRZEDŁUŻONA-GWARANCJA
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.5
-      - items_from_category: KUCHENKI
+      - items_from_category: ZMYWARKI
         are: ASSOCIATED
         with: UBEZPIECZENIE
         by_relation: ONE_TO_ONE
@@ -651,11 +641,72 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.3
  ####################################
-     # - items_from_category: FRIDGE
-      #  are: LOOSELY_ASSOCIATED
-     #   with: WASHING_MACHINE
-      #  with_need_probability: 0.2
-     #   with_buy_probability: 0.6
+      #LUŹNE POWIĄZANIA - REGUŁY SEKWENCYJNE
+
+      - items_from_category: LODÓWKI
+        are: LOOSELY_ASSOCIATED
+        with: ZMYWARKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: LODÓWKI
+        are: LOOSELY_ASSOCIATED
+        with: PRALKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+
+      - items_from_category: PRALKI
+        are: LOOSELY_ASSOCIATED
+        with: LODÓWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: PRALKI
+        are: LOOSELY_ASSOCIATED
+        with: ZMYWARKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+      - items_from_category: ZMYWARKI
+        are: LOOSELY_ASSOCIATED
+        with: PRALKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: ZMYWARKI
+        are: LOOSELY_ASSOCIATED
+        with: LODÓWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+      - items_from_category: TELEWIZORY
+        are: LOOSELY_ASSOCIATED
+        with: KONSOLE
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+      - items_from_category: SMARTFONY-DO-600
+        are: LOOSELY_ASSOCIATED
+        with: SŁUCHAWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.
+      - items_from_category: SMARTFONY-OD-600-DO-2K
+        are: LOOSELY_ASSOCIATED
+        with: SŁUCHAWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: SMARTFONY-OD-2K-DO-4K
+        are: LOOSELY_ASSOCIATED
+        with: SŁUCHAWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+      - items_from_category: SMARTFONY-OD-4K
+        are: LOOSELY_ASSOCIATED
+        with: SŁUCHAWKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+
+
+
 
 # Highly associate - main product requires associated one to be functional
 # Associated - associated product is frequently used with the main one, but it's not required for main one to be functional
