@@ -27,7 +27,7 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - from: 05.05.2021
         to: 05.05.2021
         probability_multipliers:
-          go_to_shop: 1.2
+          go_to_shop: 4
           buy_item: 2
 
 ########## MOCNE I SŁABE POWIĄZANIA POWIĄZANIA - REGUŁY SEKWENCYJNE

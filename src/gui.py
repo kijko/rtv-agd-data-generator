@@ -11,7 +11,7 @@ from error import ValidationError
 
 def prepare_gui(run_simulation):
     window = Tk()
-    window.title("Big Data Gen")
+    window.title("Generator danych transakcyjnych")
 
     mainframe = ttk.Frame(window, padding="10 20 10 20")
     mainframe.grid(column=0, row=0, sticky=(N, W, E, S))

@@ -2,7 +2,7 @@
 version: 1
 
 global_settings:                         # ustawienia globalne, dotyczące wszystkich
-  number_of_people: 1000000                 # liczba osób w symulacji
+  number_of_people: 100000                 # liczba osób w symulacji
   simulation:
     start_month: JANUARY                 # pierwszy miesiąc symulacji
     start_year: 2020                     # rok początku symulacji
