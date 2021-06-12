@@ -12,8 +12,8 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
       - from: 10.04.2020                # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 15.04.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
         probability_multipliers:         # A prawdopodobieństwo kupienia przedmiotu jest 5 razy większe
-          go_to_shop: 5                 # Analogicznie w zdarzeniu poniżej
-          buy_item: 5
+          go_to_shop: 1.2                 # Analogicznie w zdarzeniu poniżej
+          buy_item: 2
       - from: 20.12.2020                 # od 10.04.2020 do 15.04.2020 prawdopodobieństwo pójścia do sklepu
         to: 31.12.2020                   # jest 10 razy większe (0.05 x 10 = 0.5).
         probability_multipliers:         # A prawdopodobieństwo kupienia przedmiotu jest 5 razy większe
@@ -38,15 +38,21 @@ global_settings:                         # ustawienia globalne, dotyczące wszys
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.8
       - items_from_category: TELEWIZORY
-        are: HIGHLY_ASSOCIATED
-        with: KLAWIATURY
-        by_relation: ONE_TO_ONE
-        with_buy_probability: 0.8
-      - items_from_category: TELEWIZORY
         are: ASSOCIATED
         with: NETFLIX
         by_relation: ONE_TO_ONE
         with_buy_probability: 0.6
+      - items_from_category: LODÓWKI
+        are: LOOSELY_ASSOCIATED
+        with: ZMYWARKI
+        with_need_probability: 0.2
+        with_buy_probability: 0.6
+
+      - items_from_category: TELEWIZORY
+        are: HIGHLY_ASSOCIATED
+        with: KLAWIATURY
+        by_relation: ONE_TO_ONE
+        with_buy_probability: 0.8
       - items_from_category: TELEWIZORY
         are: ASSOCIATED
         with: PRZEDŁUŻONA-GWARANCJA
