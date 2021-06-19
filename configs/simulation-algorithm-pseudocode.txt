@@ -1,0 +1,126 @@
+// Poniższy pseudo-kod zawiera uproszczony algorytm symulacji. Wiele szczegółów zostało pominiętych aby zachować
+// czytelność oraz ukazać główną zasadę działania algorytmu
+
+
+// START
+fun main(Configuration cfg) {
+    Person[][] groups_of_people := prepare groups using cfg.profiles and cfg.num_of_people
+
+    for each person_group in groups_of_people {
+        for each person in person_group {
+            start_simulation(person, cfg)
+
+            save_simulation_result(person)
+        }
+    }
+}
+
+
+// Uruchomienie symulacji dla osoby 'p' z konfiguracją 'cfg'
+fun start_simulation(Person p, Configuration cfg) {
+    Date current_date := prepare first day of simulation using cfg.start_date
+    Date last_day_date := prepare last day of simulation using cfg.end_date
+    Offer[] offers := empty array
+
+    while current_date <= last_day_date {
+
+        if current_date is first day of month {
+            p.take_month_salary()
+        }
+
+        if there are offers for current_date {
+            Offer[] current_day_offers := filter offers for current days
+
+            for each offer in current_day_offers {
+                if random() <= offer.catch_probability {
+                    p.accept_offer(offer)
+                }
+            }
+        }
+
+        if will_go_to_the_shop(person, cfg) {
+            Queue shopping_list := prepare shopping list as queue using person's needs and priorities
+            Product[] shopping_cart := prepare empty shopping cart
+
+            while shopping_list is not empty {
+                String product_category := shopping_list.pop()
+                Real current_budget := p.budget() - (calculated cost of shopping_cart)
+
+                Product[] available_products := find_available_products(cfg.products, product_category, current_budget)
+
+                if there is at least one product in available_products {
+                    Product product_to_buy := pick random from available_products
+
+                    if person_wants_product(person, product_to_buy, cfg) {
+                        shopping_cart.add(product_to_buy)
+
+                        consider_associations(person, "STRONG_ASSOCIATION", product_to_buy (as array), shopping_cart)
+                    }
+
+                }
+            }
+
+            consider_associations(person, "ASSOCIATION", shopping_cart, shopping_cart)
+            person.finalize_purchase(shopping_cart)
+            prepare_marketing_offer(shopping_cart, offers)
+
+            current_date := current_date + 1 day
+        }
+    }
+}
+
+// Model osoby
+class Person {
+    // Właściwości
+
+    Real month_salary
+    Real account_balance
+    Need[] needs
+    Product[] bought_products
+
+
+    // Metody
+
+    // Wypłacenie miesięcznego wynagrodzenia
+    fun take_month_salary()
+
+    // Przyjęcie oferty marketingowej. Dodanie nowej potrzeby na podstawie oferty
+    fun accept_offer(Offer offer)
+
+    // Zakup produktów. Odpowiednio wpływa na account_balance i zapisuje produkty które zostały zakupione
+    fun finalize_purchase(Product[] products)
+}
+
+
+// Utrwala dane osoby zgromadzone podczas symulacji
+fun save_simulation_result(Person person)
+
+
+// Sprawdza luźne powiązania dla kupionych produktów 'bought_products'
+// Jeśli takowe zajdzie, dodaje do tablicy offers oferte marketingową z datą odbioru 1-7 dni do przodu
+// Dodana oferta zawiera prawdopodobieństwo skorzystania z oferty 'catch_probability' pobrane z konfiguracji powiązania
+fun prepare_marketing_offer(Product[] bought_products, Offer[] offers)
+
+
+// Sprawdza powiązania typu 'association_type' dla produktów 'bought_products'
+// W przypadku znalezienia powiązanych kategorii oraz odpowiednich produktów umieszczane są one w koszyku
+// z odpowiednim prawdopodobieństwem
+// Funkcja wywoływana rekurencyjnie dla każdego kupionego produktu
+fun consider_associations(Person person, String association_type, Product[] bought_products, Product[] shopping_cart, Configuration cfg)
+
+
+// Zwraca pseudo-losową liczbę rzeczywistą z przedziału (0;1)
+fun random(): Real
+
+
+// Zwraca przefiltrowaną listę 'all_products' z produktami z kategorii 'category' oraz maksymalną ceną 'max_price'
+fun find_available_products(Product[] all_products, String category, Real max_price): Product[]
+
+
+// Decyduje czy osoba pójdzie do sklepu na podstawie 'go_to_shop_probability' oraz bonusów 'date_probability_bonuses' z 'cfg'
+fun will_go_to_the_shop(Person person, Configuration cfg): boolean
+
+
+// Decyduje czy osoba kupi produkt 'product' na podstawie 'buy_probability' oraz 'date_probability_bonuses' z 'cfg'
+fun person_wants_product(Person person, Product product, Configuration cfg): boolean
+
