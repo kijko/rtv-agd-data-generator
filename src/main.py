@@ -3,7 +3,7 @@ import gui
 import dbgen
 
 
-def generate_big_data(progress_handler, simulation_config, output_dir):
+def generate_big_data(progress_handler, simulation_config, output_dir, stopper):
     db = dbgen.Database(simulation_config.product_repository.find_all(), output_dir)
 
     # print(repr(simulation_config))
@@ -14,7 +14,7 @@ def generate_big_data(progress_handler, simulation_config, output_dir):
         progress_handler
     )
 
-    simulation.run()
+    simulation.run(stopper)
 
     db.end()
 

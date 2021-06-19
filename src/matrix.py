@@ -22,7 +22,7 @@ class Matrix:
         self.groups = _create_groups(config.global_settings.population, config.profiles)
         self._person_counter = 0
 
-    def run(self):
+    def run(self, stopper):
         world = World(
             self.config.global_settings.start_month,
             self.config.global_settings.start_year,
@@ -43,21 +43,30 @@ class Matrix:
 
         self._progress_handler.on_progress_change(self._person_counter, actually_population)
 
-        for group in self.groups:
+        if stopper.should_stop:
+            # print("Zatrzymano symulacje odrazu")
+            self._progress_handler.on_end()
+        else:
+            for group in self.groups:
 
-            # print("Uruchomiono symulacje dla grupy: " + group.name)
-            while group.has_next_person():
-                person = group.next_person()
+                # print("Uruchomiono symulacje dla grupy: " + group.name)
+                while group.has_next_person():
+                    person = group.next_person()
 
-                self._event_handler.person_was_born(person)
+                    self._event_handler.person_was_born(person)
 
-                world.start(person)
-                world.reset()
+                    world.start(person)
+                    world.reset()
 
-                self._person_counter += 1
-                self._progress_handler.on_progress_change(self._person_counter, actually_population)
+                    self._person_counter += 1
+                    self._progress_handler.on_progress_change(self._person_counter, actually_population)
 
-        self._progress_handler.on_end()
+                    if stopper.should_stop:
+                        # print("Zatrzymuje symulacje")
+                        break
+
+            self._progress_handler.on_end()
+
 
 
 class Group:

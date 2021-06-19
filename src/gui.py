@@ -9,6 +9,11 @@ from products import CSVInMemoryProductRepository
 from error import ValidationError
 
 
+class Stopper:
+    def __init__(self):
+        self.should_stop = False
+
+
 def prepare_gui(run_simulation):
     window = Tk()
     window.title("Generator danych transakcyjnych")
@@ -65,10 +70,13 @@ def prepare_gui(run_simulation):
             progress.set("0 / 0")
             status.set("Symulacja trwa...")
             freeze_buttons()
+            stop_button.configure(state=NORMAL)
 
         def on_end(self):
             status.set("Symulacja zakończona")
             unfreeze_buttons()
+            stop_button.configure(state=DISABLED)
+            set_gracefully_stop(False)
 
         def on_progress_change(self, persons_done, all_people):
             progress.set(str(persons_done) + " / " + str(all_people))
@@ -97,6 +105,14 @@ def prepare_gui(run_simulation):
         else:
             generate_button.configure(state=DISABLED)
 
+    stopper = Stopper()
+
+    def set_gracefully_stop(bo):
+        stopper.should_stop = bo
+
+    def stop_gracefully():
+        set_gracefully_stop(True)
+
     def run_simulation_on_as_new_thread():
         if input.product_repository is not None and input.simulation_config is not None:
             output_dir = "."
@@ -106,7 +122,7 @@ def prepare_gui(run_simulation):
 
             threading.Thread(
                 target=run_simulation,
-                args=(GUISimulationProgressHandler(), input.simulation_config, output_dir)
+                args=(GUISimulationProgressHandler(), input.simulation_config, output_dir, stopper)
             ).start()
         else:
             print("Plik z produktami oraz konfiguracją muszą być określone")
@@ -123,6 +139,8 @@ def prepare_gui(run_simulation):
     progress = StringVar()
     progress.set("0 / 0")
     ttk.Label(mainframe, textvariable=progress).grid(column=0, row=6, sticky=W)
+
+    stop_button = ttk.Button(mainframe, text="Zatrzymaj", command=stop_gracefully, state=DISABLED)
 
     for child in mainframe.winfo_children():
         child.grid_configure(padx=5, pady=5)
