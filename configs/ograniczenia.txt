@@ -15,7 +15,7 @@ dodatnimi określającymi mnożniki prawdopodobieństw dla dziennego prawdopodob
 prawdopodobieństwa kupna przedmiotu. Daje to możliwość manipulacji tymi prawdopodobieństwami w obie strony tzn.
 możemy zmniejszyć bądź zwiększyć dane prawdopodobieństwo na danym etapie symulacji.
 
-2. Powiązania między produktami
+2. Powiązania "silne" oraz "zwykłe" między produktami
 
 patrz opis powiązań
 
@@ -71,4 +71,13 @@ Profile dają możliwość tworzenia grup ludzi o podobnych potrzebach zakupowyc
 Potrzeby to nic innego jak lista kategorii produktów jakiej potrzebuje dana grupa osób wraz z priorytetami.
 Gdy zapotrzebowanie na produkt danej osoby zostanie spełnione, potrzeba nie jest rozpatrywana przy późniejszych zakupach.
 Jest to kolejne swego rodzaju ograniczenie na ilość/losowość kupowanych przedmiotów.
+
+7. Oferty marketingowe ("słabe" powiązania między produktami)
+
+W dzisiejszych czasach konsumpcjonizmu na każdym kroku oferowane są nam produkty/usługi. Marketing napędzający sprzedaż
+jest wszechobecny na każdym rynku.
+Aby dane jeszcze bardziej przypominały dane rzeczywiste, zaimplementowany został koncept "słabych" powiązań
+między produktami. Mechanizm został już opisany przy okazji opisu rodzaju powiązań międzyproduktowych, natomiast w skrócie:
+Wprowadza on dodatkowe prawdopodobieństwo na skorzystanie z oferty marketingowej, przesłanej osobie na podstawie wcześniej
+kupionych produktów.
 
