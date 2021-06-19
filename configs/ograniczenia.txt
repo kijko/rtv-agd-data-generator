@@ -1,0 +1,74 @@
+Algorytm generowania danych zastosowany w programie ma charakter losowy. Każda decyzja na poszczególnym etapie
+pojedyńczej symulacji jest podejmowana na podstawie losowania liczb pseudolosowych.
+Aby dane wynikowe były zbliżone do rzeczywistych konieczne jest zastosowanie odpowiednich ograniczeń (czynników), które
+w mniejszym lub większym stopniu będą manipulować decyzjami bądź wartościami prawdopodobieństw.
+
+Dodatkowe czynniki wpływające na algorytm zastosowane w programie:
+1. Bonus prawdopodobieństwa w zależności od daty
+
+Dzienne prawdopodobieństwo określające to, czy dana osoba pójdzie do sklepu sprawdzane jest każdego dnia symulacji.
+Rozwiązanie to zdaje się rozsądne, ale tylko przy założeniu, że prawdopodobieństwo zakupów jest takie same każdego dnia.
+W rzeczywistości na to czy zdecydujemy się na zakupy wpływają inne czynniki tj. np. pora roku czy okres przedświąteczny.
+
+Konfiguracja wejściowa daje możliwość określenia przedziału czasowego jako parę dat od-do wraz z liczbami rzeczywistymi
+dodatnimi określającymi mnożniki prawdopodobieństw dla dziennego prawdopodobieństwa pójścia do sklepu oraz
+prawdopodobieństwa kupna przedmiotu. Daje to możliwość manipulacji tymi prawdopodobieństwami w obie strony tzn.
+możemy zmniejszyć bądź zwiększyć dane prawdopodobieństwo na danym etapie symulacji.
+
+2. Powiązania między produktami
+
+patrz opis powiązań
+
+3. Relacje w powiązaniach "silnych" oraz "zwykłych"
+
+Z opisu powiązań "silnych" oraz "zwykłych" możemy wywnioskować ich pewną część wspólną. Oba rodzaje dotyczą
+wyraźnych asocjacji między produktami i symbolizują to, że dwa powiązane ze sobą produkty są zazwyczaj używane jako zestaw.
+Rozważając przykłady takich zestawów możemy zauważyć, że często są one powiązane ze sobą w jakiejś relacji.
+Najprostszymi przykładami takich relacji mogą być relacje na podstawie liczebności przedmiotów.
+Dla przykładu:
+
+Produkt A: Telewizor
+Produkt B: Pakiet kanałów telewizyjnych
+
+Osoba kupująca produkt A, może rozważyć zakup produktu B, ponieważ są to produkty powiązane.
+Natomiast jeśli osoba już posiada dany produkt B, nie potrzebuje drugiego (zakładamy, że
+może użyć pakietu kanałów na wielu telewizorach)
+Jest to przykład powiązania "Jeden do wielu"
+
+Drugi przykład:
+
+Produkt C: Wiatrak elektryczny na baterie (bez baterii w zestawie)
+Produkt D: Baterie
+
+Osoba kupująca produkt C, może rozważyć zakup produktu D, ponieważ są to produkty powiązane.
+Dodatkowo osoba może kupić produkt D, nawet jeśli już takowy posiada, ponieważ niemożliwym jest użycie jednych
+baterii do wielu przedmiotów jednocześnie.
+Jest to przykład powiązania "Jeden do jednego"
+
+Konfiguracja powiązań daje możliwość określenia relacji pomiędzy powiązanymi produktami.
+
+4. Budżet każdego uczestnika symulacji w raz z systemem przyznawania wynagrodzenia
+
+Ważnym czynnikiem jest możliwość sterowania ilością kupowanych przedmiotów przez daną grupę osobową, dlatego
+kupno przedmiotu oprócz prawdopodobieństwa pójścia do sklepu i prawdopodobieństwa kupna przedmiotu z danej kategorii
+zależy również od budżetu pieniężnego osoby w danym czasie symulacji.
+Do każdej osoby przed startem jej symulacji, przyznawana jest wysokość wynagrodzenia określona w konfiguracji profilu.
+Wysokość wynagrodzenia określana jest przedziałem wartości całkowitych 'salary' w konfiguracji profilu.
+Wynagrodzenie przyznawane jest pierwszego dnia każdego miesiąca symulacji.
+
+5. Kwota początkowa uczestnika symulacji
+
+Jest to drugi czynnik wpływający na budżet osoby w symulacji.
+Kwota początkowa, domyślnie 0 określana jest wartością 'initial_account_balance' w konfiguracji profilu.
+
+6. Koncepcja profilu i potrzeby
+
+Podstawowym czynnikiem, który nadaje naturalność danym wynikowym są koncepcje profilu oraz związanych z nim potrzeb.
+(patrz opis profili i potrzeb gdzieś w pracy)
+
+Profile dają możliwość tworzenia grup ludzi o podobnych potrzebach zakupowych oraz budżetach.
+
+Potrzeby to nic innego jak lista kategorii produktów jakiej potrzebuje dana grupa osób wraz z priorytetami.
+Gdy zapotrzebowanie na produkt danej osoby zostanie spełnione, potrzeba nie jest rozpatrywana przy późniejszych zakupach.
+Jest to kolejne swego rodzaju ograniczenie na ilość/losowość kupowanych przedmiotów.
+
